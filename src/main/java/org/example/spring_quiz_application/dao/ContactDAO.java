@@ -10,12 +10,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public class ContactDao {
+public class ContactDAO {
     JdbcTemplate jdbcTemplate;
     ContactRowMapper rowMapper;
 
     @Autowired
-    public ContactDao(JdbcTemplate jdbcTemplate,
+    public ContactDAO(JdbcTemplate jdbcTemplate,
                       ContactRowMapper rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.rowMapper = rowMapper;
