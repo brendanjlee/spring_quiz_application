@@ -3,6 +3,7 @@ package org.example.spring_quiz_application.dao;
 import org.example.spring_quiz_application.dao.rowMapper.UserRowMapper;
 import org.example.spring_quiz_application.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -48,7 +49,11 @@ public class UserDAO {
     // get user by id
     public User getUserById(int id) {
         String query = "select * from user where id = ?";
-        return jdbcTemplate.queryForObject(query, rowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(query, rowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     // update user by id
@@ -69,7 +74,6 @@ public class UserDAO {
     // delete user by id
     public void deleteUser(int id) {
         String query = "delete from user where id = ?";
-
         jdbcTemplate.update(query, id);
     }
 
