@@ -20,6 +20,7 @@ public class WebConfig {
         dataSource.setUrl(DB_URL);
         dataSource.setUsername(USER);
         dataSource.setPassword(PASSWORD);
+        System.out.println("Connected to database at: " + DB_URL);
         return dataSource;
     }
 }
