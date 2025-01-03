@@ -74,7 +74,6 @@ CREATE TABLE quiz_result
     id          INT PRIMARY KEY AUTO_INCREMENT,
     user_id     INT         NOT NULL,
     category_id INT         NOT NULL,
-    name        VARCHAR(30) NOT NULL,
     time_start  TIMESTAMP   NOT NULL,
     time_end    TIMESTAMP   NOT NULL,
 
@@ -88,11 +87,11 @@ DROP TABLE IF EXISTS quiz_question;
 CREATE TABLE quiz_question
 (
     id             int PRIMARY KEY AUTO_INCREMENT,
-    quiz_id        int NOT NULL,
+    quiz_result_id        int NOT NULL,
     question_id    int NOT NULL,
     user_choice_id int NOT NULL,
 
-    FOREIGN KEY (quiz_id) REFERENCES quiz_result (id) ON DELETE CASCADE,
+    FOREIGN KEY (quiz_result_id) REFERENCES quiz_result (id) ON DELETE CASCADE,
     FOREIGN KEY (question_id) REFERENCES question (id) ON DELETE CASCADE,
     FOREIGN KEY (user_choice_id) REFERENCES choice (id) ON DELETE CASCADE
 );
@@ -338,3 +337,45 @@ VALUES
 (30, 'Beans', FALSE),
 (30, 'Peas', FALSE);
 
+-- Quiz Results
+insert into quiz_result (user_id, category_id, time_start, time_end)
+VALUES (2, 1, '2024-12-30 16:48:55', '2024-12-30 16:55:55');
+insert into quiz_question (id, quiz_result_id, question_id, user_choice_id)
+VALUES (1, 1, 1, 1),
+       (2, 1, 2, 2),
+       (3, 1, 3, 3),
+       (4, 1, 4, 4),
+       (5, 1, 5, 1),
+       (6, 1, 6, 2),
+       (7, 1, 7, 3),
+       (8, 1, 8, 4),
+       (9, 1, 9, 1),
+       (10, 1, 10, 2);
+
+insert into quiz_result (id, user_id, category_id, time_start, time_end)
+VALUES (2, 2, 2, '2024-12-31 16:48:55', '2024-12-31 16:55:55');
+insert into quiz_question (quiz_result_id, question_id, user_choice_id)
+VALUES (2, 1, 4),
+       (2, 2, 3),
+       (2, 3, 2),
+       (2, 4, 1),
+       (2, 5, 1),
+       (2, 6, 2),
+       (2, 7, 3),
+       (2, 8, 4),
+       (2, 9, 5),
+       (2, 10, 6);
+
+insert into quiz_result (id, user_id, category_id, time_start, time_end)
+VALUES (3, 2, 3, '2024-12-31 19:48:55', '2024-12-31 19:55:55');
+insert into quiz_question (quiz_result_id, question_id, user_choice_id)
+VALUES (3, 1, 4),
+       (3, 2, 1),
+       (3, 3, 2),
+       (3, 4, 3),
+       (3, 5, 4),
+       (3, 6, 3),
+       (3, 7, 2),
+       (3, 8, 1),
+       (3, 9, 1),
+       (3, 10, 2);
