@@ -6,9 +6,9 @@
 <body>
 <div class="navbar">
     <a href="/" class="nav-link">Home</a>
-    <a href="/login" class="nav-link">Login</a>
-    <a href="/register" class="nav-link">Register</a>
-    <a href="/contact" class="nav-link">Contact Us</a>
+    <a href="${pageContext.request.contextPath}/login" class="nav-link">Login</a>
+    <a href="${pageContext.request.contextPath}/register" class="nav-link">Register</a>
+    <a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact Us</a>
 </div>
 </body>
 </html>
