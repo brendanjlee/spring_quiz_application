@@ -56,6 +56,16 @@ public class UserDAO {
         }
     }
 
+    // get user by email
+    public User getUserByEmail(String email) {
+        String query = "select * from user where email = ?";
+        try {
+            return jdbcTemplate.queryForObject(query, rowMapper, email);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
     // update user by id
     public void updateUser(User user) {
         String query = "update user set email = ?, first_name = ?," +

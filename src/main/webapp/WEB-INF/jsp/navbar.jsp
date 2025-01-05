@@ -1,14 +1,37 @@
-<!-- WEB-INF/jsp/includes/navbar.jsp -->
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-<div class="navbar">
-    <a href="/" class="nav-link">Home</a>
-    <a href="${pageContext.request.contextPath}/login" class="nav-link">Login</a>
-    <a href="${pageContext.request.contextPath}/register" class="nav-link">Register</a>
-    <a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact Us</a>
-</div>
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Home</a>
+        <div class="d-flex ms-auto gap-5">
+            <c:choose>
+                <c:when test="${not empty sessionScope.user}">
+                    <form action="${pageContext.request.contextPath}/api/logout" method="post">
+                        <button type="submit" class="nav-link" style="background: none; border: none; color: inherit;">
+                            Logout
+                        </button>
+                    </form>
+                </c:when>
+                <c:otherwise>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/login">Login</a>
+                </c:otherwise>
+            </c:choose>
+            <c:if test="${empty sessionScope.user}">
+                <a class="nav-link" href="${pageContext.request.contextPath}/register">Register</a>
+            </c:if>
+            <a class="nav-link" href="${pageContext.request.contextPath}/contact">Contact Us</a>
+        </div>
+
+    </div>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
