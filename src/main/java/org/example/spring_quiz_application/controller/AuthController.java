@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.example.spring_quiz_application.domain.User;
 import org.example.spring_quiz_application.service.AuthService;
+import org.example.spring_quiz_application.service.UserService;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService authService;
+    private final UserService userService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
+        this.userService = userService;
     }
 
     // todo redirect to quiz if logged in already
@@ -64,13 +67,19 @@ public class AuthController {
         }
 
         System.out.println("Wrong password");
-        return "login";
+        return "redirect:/login";
     }
 
     @PostMapping("/register")
-    public boolean postRegister(@RequestBody User user) {
-        System.out.println("register");
-        return true;
+    public String postRegister(@RequestParam("email") String email,
+                               @RequestParam("firstName") String firstName,
+                               @RequestParam("lastName") String lastName,
+                               @RequestParam("password") String password,
+                               Model model) {
+        userService.createUser(email, firstName, lastName, password, false,
+                true);
+
+        return "redirect:/login";
     }
 
     @PostMapping("/logout")
@@ -81,6 +90,6 @@ public class AuthController {
         if (oldSession != null) {
             oldSession.invalidate();
         }
-        return "login";
+        return "redirect:/login";
     }
 }

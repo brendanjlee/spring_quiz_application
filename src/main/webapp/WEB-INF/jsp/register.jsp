@@ -15,11 +15,7 @@
                 <h3>Register</h3>
             </div>
             <div class="card-body">
-                <form method="post" action="api/register">
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name="username">
-                    </div>
+                <form method="post" action="${pageContext.request.contextPath}/api/auth/register">
                     <div class="mb-3">
                         <label for="firstName" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="firstName" name="firstName">

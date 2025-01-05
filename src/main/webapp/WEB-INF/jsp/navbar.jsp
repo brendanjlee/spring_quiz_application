@@ -12,7 +12,7 @@
         <div class="d-flex ms-auto gap-5">
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
-                    <form action="${pageContext.request.contextPath}/api/logout" method="post">
+                    <form action="${pageContext.request.contextPath}/api/auth/logout" method="post">
                         <button type="submit" class="nav-link" style="background: none; border: none; color: inherit;">
                             Logout
                         </button>

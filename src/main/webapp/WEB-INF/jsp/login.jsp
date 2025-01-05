@@ -15,7 +15,7 @@
                 <h3>Login</h3>
             </div>
             <div class="card-body">
-                <form method="post" action="api/login">
+                <form method="post" action="api/auth/login">
                     <div class="mb-3">
                         <label for="userEmail" class="form-label">Email</label>
                         <input type="email" class="form-control" id="userEmail" name="userEmail">
