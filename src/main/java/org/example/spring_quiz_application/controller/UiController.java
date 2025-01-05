@@ -61,4 +61,9 @@ public class UiController {
     public String contactUs() {
         return "contactForm";
     }
+
+    @GetMapping("/quiz")
+    public String quiz(Model model) {
+        return "quiz";
+    }
 }

@@ -282,7 +282,8 @@ VALUES (3, 'Which fruit is known as the king of fruits?', TRUE),
        (3, 'Which nut is used to make marzipan?', TRUE),
        (3, 'What type of bread is used in a traditional Reuben sandwich?', TRUE),
        (3, 'What fruit has its seeds on the outside?', TRUE),
-       (3, 'What is the main ingredient in hummus?', TRUE);
+       (3, 'What is the main ingredient in hummus?', TRUE),
+       (3, "Shold you boil chicken breast?", false);
 
 INSERT INTO choice (question_id, text, is_answer)
 VALUES

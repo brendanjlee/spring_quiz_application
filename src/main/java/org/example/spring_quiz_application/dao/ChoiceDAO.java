@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class ChoiceDAO {
     JdbcTemplate jdbcTemplate;
@@ -43,5 +45,10 @@ public class ChoiceDAO {
     public void deleteChoice(int id) {
         String query = "DELETE FROM choice WHERE question_id = ?";
         jdbcTemplate.update(query, id);
+    }
+
+    public List<Choice> getChoicesByQuestionId(int questionId) {
+        String query = "SELECT * FROM choice WHERE question_id = ?";
+        return jdbcTemplate.query(query, rowMapper, questionId);
     }
 }

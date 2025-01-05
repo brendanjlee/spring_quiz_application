@@ -32,6 +32,12 @@ public class QuestionDAO {
         return jdbcTemplate.query(query, rowMapper);
     }
 
+    // get all questions by category
+    public List<Question> getAllQuestionsByCategoryId(int categoryId) {
+        String query = "SELECT * FROM question WHERE category_id = ?";
+        return jdbcTemplate.query(query, rowMapper, categoryId);
+    }
+
     // get question by ID
     public Question getQuestion(int questionId) {
         String query = "SELECT * FROM question WHERE id = ?";

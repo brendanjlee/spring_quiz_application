@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.example.spring_quiz_application.domain.User;
 import org.example.spring_quiz_application.service.AuthService;
 import org.example.spring_quiz_application.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,7 @@ public class AuthController {
     private final AuthService authService;
     private final UserService userService;
 
+    @Autowired
     public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
         this.userService = userService;
