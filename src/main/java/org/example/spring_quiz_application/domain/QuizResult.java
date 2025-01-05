@@ -15,4 +15,15 @@ public class QuizResult {
     private int categoryId;
     private LocalDateTime timeStart;
     private LocalDateTime timeEnd;
+
+    private String categoryName;
+
+    public QuizResult(int id, int userId, int categoryId,
+                      LocalDateTime timeStart, LocalDateTime timeEnd) {
+        this.id = id;
+        this.userId = userId;
+        this.categoryId = categoryId;
+        this.timeStart = timeStart;
+        this.timeEnd = timeEnd;
+    }
 }

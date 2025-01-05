@@ -339,7 +339,7 @@ VALUES
 
 -- Quiz Results
 insert into quiz_result (user_id, category_id, time_start, time_end)
-VALUES (2, 1, '2024-12-30 16:48:55', '2024-12-30 16:55:55');
+VALUES (1, 1, '2024-12-30 16:48:55', '2024-12-30 16:55:55');
 insert into quiz_question (id, quiz_result_id, question_id, user_choice_id)
 VALUES (1, 1, 1, 1),
        (2, 1, 2, 2),
@@ -353,7 +353,7 @@ VALUES (1, 1, 1, 1),
        (10, 1, 10, 2);
 
 insert into quiz_result (id, user_id, category_id, time_start, time_end)
-VALUES (2, 2, 2, '2024-12-31 16:48:55', '2024-12-31 16:55:55');
+VALUES (2, 1, 2, '2024-12-31 16:48:55', '2024-12-31 16:55:55');
 insert into quiz_question (quiz_result_id, question_id, user_choice_id)
 VALUES (2, 1, 4),
        (2, 2, 3),
@@ -367,7 +367,7 @@ VALUES (2, 1, 4),
        (2, 10, 6);
 
 insert into quiz_result (id, user_id, category_id, time_start, time_end)
-VALUES (3, 2, 3, '2024-12-31 19:48:55', '2024-12-31 19:55:55');
+VALUES (3, 1, 3, '2024-12-31 19:48:55', '2024-12-31 19:55:55');
 insert into quiz_question (quiz_result_id, question_id, user_choice_id)
 VALUES (3, 1, 4),
        (3, 2, 1),
