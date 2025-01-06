@@ -103,7 +103,7 @@ VALUES ('Brendan', 'Lee', 'brendanjlee5@gmail.com', 'password', TRUE, TRUE);
 
 -- users
 INSERT INTO user (first_name, last_name, email, password_hash, is_admin, is_active)
-VALUES ('John', 'Doe', 'johndoe123@bmail.com', 'hashedpassword1', FALSE, TRUE),
+VALUES ('John', 'Doe', 'test@test.com', 'password', FALSE, TRUE),
        ('Jane', 'Smith', 'janesmith456@cmail.com', 'hashedpassword2', FALSE, TRUE),
        ('Emily', 'Johnson', 'emilyjohnson789@coldmail.com', 'hashedpassword3', FALSE, TRUE),
        ('Michael', 'Brown', 'michaelbrown321@bmail.com', 'hashedpassword4', FALSE, TRUE),

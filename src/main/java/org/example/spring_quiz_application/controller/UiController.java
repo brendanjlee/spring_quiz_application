@@ -65,22 +65,6 @@ public class UiController {
         return "quiz";
     }
 
-    @GetMapping("/LKJLKJLOJKLJ/{userId}/ ")
-    public String getMostRecentQuizResult(@PathVariable int userId,
-                                          Model model) {
-        System.out.println("wow!");
-        // get the most recent quiz results for the user
-        List<QuizResult> quizResults =
-                quizService.getAllQuizResultsByUserId(userId);
-        quizResults.sort(Comparator.comparing(QuizResult::getTimeEnd).reversed());
-        QuizResult quizResult = quizResults.get(0);
-        quizResult.setCategoryName(quizService.getCategoryNameById(quizResult.getCategoryId()));
-
-        // retrieve quiz results for the model
-        model.addAttribute("quizResult", quizResult);
-        return "quizResult";
-    }
-
     @GetMapping("quiz/result/{quizResultId}")
     public String getQuizResult(@PathVariable int quizResultId, Model model) {
         // get quiz result
@@ -111,5 +95,10 @@ public class UiController {
         model.addAttribute("questions", questions);
         model.addAttribute("result", result);
         return "quizResult";
+    }
+
+    @GetMapping("/admin")
+    public String admin(Model model) {
+        return "adminHome";
     }
 }

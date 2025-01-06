@@ -59,10 +59,9 @@ public class QuizController {
             Collections.shuffle(choices);
             question.setChoices(choices);
         }
-
-        System.out.println("Start Quiz");
-        System.out.println("categoryId: " + categoryId);
-        System.out.println("questions: " + questions);
+//        System.out.println("Start Quiz");
+//        System.out.println("categoryId: " + categoryId);
+//        System.out.println("questions: " + questions);
 
         // attach to model
         model.addAttribute("categoryName", categoryName);

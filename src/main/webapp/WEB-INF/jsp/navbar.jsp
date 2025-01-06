@@ -10,6 +10,9 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Home</a>
         <div class="d-flex ms-auto gap-5">
+            <c:if test="${sessionScope.user.admin}">
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin">Admin Page</a>
+            </c:if>
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
                     <form action="${pageContext.request.contextPath}/api/auth/logout" method="post">
