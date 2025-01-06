@@ -17,6 +17,7 @@ public class QuizResult {
     private LocalDateTime timeEnd;
 
     private String categoryName;
+    private int score;
 
     public QuizResult(int id, int userId, int categoryId,
                       LocalDateTime timeStart, LocalDateTime timeEnd) {
@@ -25,5 +26,6 @@ public class QuizResult {
         this.categoryId = categoryId;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
+        this.score = 0;
     }
 }

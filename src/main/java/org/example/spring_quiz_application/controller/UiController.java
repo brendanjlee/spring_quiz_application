@@ -1,5 +1,6 @@
 package org.example.spring_quiz_application.controller;
 
+import org.example.spring_quiz_application.DTO.QuizResultPageDTO;
 import org.example.spring_quiz_application.domain.*;
 import org.example.spring_quiz_application.service.AdminService;
 import org.example.spring_quiz_application.service.QuizService;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -83,7 +85,6 @@ public class UiController {
         questions.forEach(question -> {
             question.getChoices().forEach(choice -> {
                 quizService.mapQuizQuestionsToChoices(choice, quizResultId);
-                System.out.println(choice);
             });
         });
 
@@ -117,5 +118,25 @@ public class UiController {
         model.addAttribute("users", users);
 
         return "adminUserManagement";
+    }
+
+    @GetMapping("/quizResultManagement")
+    public String quizResultManagement(@RequestParam(value = "category",
+                                               required = false) Integer categoryId,
+                                       @RequestParam(value = "user",
+                                               required = false) Integer userId,
+                                       Model model) {
+        List<QuizResultPageDTO> results = adminService.getAllQuizResults();
+        List<QuizResultPageDTO> filteredResults =
+                adminService.getFilteredQuizResults(results, categoryId,
+                        userId);
+        List<Category> categories = quizService.getAllCategories();
+        List<User> users = adminService.getAllUsers();
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("results", filteredResults);
+        model.addAttribute("users", users);
+
+        return "adminQuizResult";
     }
 }
