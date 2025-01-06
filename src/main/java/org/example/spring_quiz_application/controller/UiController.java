@@ -1,6 +1,7 @@
 package org.example.spring_quiz_application.controller;
 
 import org.example.spring_quiz_application.domain.*;
+import org.example.spring_quiz_application.service.AdminService;
 import org.example.spring_quiz_application.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,10 +17,12 @@ import java.util.List;
 @Controller
 public class UiController {
     private final QuizService quizService;
+    private final AdminService adminService;
 
     @Autowired
-    public UiController(QuizService quizService) {
+    public UiController(QuizService quizService, AdminService adminService) {
         this.quizService = quizService;
+        this.adminService = adminService;
     }
 
     @GetMapping("/")
@@ -38,7 +41,6 @@ public class UiController {
         User user = (User) session.getAttribute("user");
         List<QuizResult> quizResults =
                 quizService.getAllQuizResultsByUserId(user.getId());
-        System.out.println(quizResults);
 
         model.addAttribute("quizResults", quizResults);
 
@@ -97,8 +99,23 @@ public class UiController {
         return "quizResult";
     }
 
+    @GetMapping("/error")
+    public String error() {
+        return "error";
+    }
+
     @GetMapping("/admin")
     public String admin(Model model) {
         return "adminHome";
+    }
+
+    @GetMapping("/userManagement")
+    public String userManagement(Model model) {
+        // get all users
+        List<User> users = adminService.getAllUsers();
+        System.out.println(users);
+        model.addAttribute("users", users);
+
+        return "adminUserManagement";
     }
 }

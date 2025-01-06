@@ -59,9 +59,6 @@ public class QuizController {
             Collections.shuffle(choices);
             question.setChoices(choices);
         }
-//        System.out.println("Start Quiz");
-//        System.out.println("categoryId: " + categoryId);
-//        System.out.println("questions: " + questions);
 
         // attach to model
         model.addAttribute("categoryName", categoryName);
@@ -92,12 +89,6 @@ public class QuizController {
         LocalDateTime startTime = (LocalDateTime) session.getAttribute(
                 "startTime");
         LocalDateTime endTime = LocalDateTime.now();
-
-//        System.out.println("====Submit====\n" + quizAnswers.toString());
-//        System.out.println("User ID: " + user.getId());
-//        System.out.println("Category ID: " + categoryId);
-//        System.out.println("Start Time: " + startTime);
-//        System.out.println("End Time: " + endTime);
 
         // process quiz and redirect to results
         int quizResultId = quizService.submitQuiz(user.getId(), categoryId,
