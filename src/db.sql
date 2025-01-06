@@ -103,7 +103,7 @@ VALUES ('Brendan', 'Lee', 'brendanjlee5@gmail.com', 'password', TRUE, TRUE);
 
 -- users
 INSERT INTO user (first_name, last_name, email, password_hash, is_admin, is_active)
-VALUES ('John', 'Doe', 'test@test.com', 'password', FALSE, TRUE),
+VALUES ('Firstname', 'Lastname', 'test@test.com', 'test', FALSE, TRUE),
        ('Jane', 'Smith', 'janesmith456@cmail.com', 'hashedpassword2', FALSE, TRUE),
        ('Emily', 'Johnson', 'emilyjohnson789@coldmail.com', 'hashedpassword3', FALSE, TRUE),
        ('Michael', 'Brown', 'michaelbrown321@bmail.com', 'hashedpassword4', FALSE, TRUE),
@@ -113,7 +113,7 @@ VALUES ('John', 'Doe', 'test@test.com', 'password', FALSE, TRUE),
        ('James', 'Taylor', 'jamestaylor456@cmail.com', 'hashedpassword8', FALSE, TRUE),
        ('Anna', 'Anderson', 'annaanderson789@coldmail.com', 'hashedpassword9', FALSE, TRUE),
        ('Chris', 'Moore', 'chrismoore321@bmail.com', 'hashedpassword10', FALSE, FALSE);
-
+       
 -- contact messages
 INSERT INTO contact (subject, message, email, time_submitted)
 VALUES ('Account Issue', 'I am unable to log into my account. Please help!', 'johndoe123@bmail.com',
@@ -339,7 +339,7 @@ VALUES
 
 -- Quiz Results
 insert into quiz_result (user_id, category_id, time_start, time_end)
-VALUES (1, 1, '2024-12-30 16:48:55', '2024-12-30 16:55:55');
+VALUES (2, 2, '2024-12-30 16:48:55', '2024-12-30 16:55:55');
 insert into quiz_question (id, quiz_result_id, question_id, user_choice_id)
 VALUES (1, 1, 1, 1),
        (2, 1, 2, 5),
@@ -353,7 +353,7 @@ VALUES (1, 1, 1, 1),
        (10, 1, 10, 39);
 
 insert into quiz_result (id, user_id, category_id, time_start, time_end)
-VALUES (2, 1, 2, '2024-12-31 16:48:55', '2024-12-31 16:55:55');
+VALUES (2, 2, 2, '2024-12-31 16:48:55', '2024-12-31 16:55:55');
 insert into quiz_question (id, quiz_result_id, question_id, user_choice_id)
 VALUES (11, 2, 11, 41),
        (12, 2, 12, 45),
@@ -367,7 +367,7 @@ VALUES (11, 2, 11, 41),
        (20, 2, 20, 78);
 
 insert into quiz_result (id, user_id, category_id, time_start, time_end)
-VALUES (3, 1, 3, '2024-12-31 19:48:55', '2024-12-31 19:55:55');
+VALUES (3, 2, 3, '2024-12-31 19:48:55', '2024-12-31 19:55:55');
 insert into quiz_question (id, quiz_result_id, question_id, user_choice_id)
 VALUES (21, 3, 21, 81),
        (22, 3, 22, 85),
