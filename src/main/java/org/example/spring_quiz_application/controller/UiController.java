@@ -114,12 +114,19 @@ public class UiController {
     }
 
     @GetMapping("/admin")
-    public String admin(Model model) {
+    public String admin(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+        User user = (User) session.getAttribute("user");
+        if (!user.isAdmin()) return "redirect:/login";
         return "adminHome";
     }
 
     @GetMapping("/userManagement")
-    public String userManagement(Model model) {
+    public String userManagement(HttpServletRequest request, Model model) {
+        if (!adminService.isAdmin(request)) return "redirect:/";
         // get all users
         List<User> users = adminService.getAllUsers();
         System.out.println(users);
@@ -133,7 +140,9 @@ public class UiController {
                                                required = false) Integer categoryId,
                                        @RequestParam(value = "user",
                                                required = false) Integer userId,
-                                       Model model) {
+                                       Model model,
+                                       HttpServletRequest request) {
+        if (!adminService.isAdmin(request)) return "redirect:/";
         List<QuizResultPageDTO> results = adminService.getAllQuizResults();
         List<QuizResultPageDTO> filteredResults =
                 adminService.getFilteredQuizResults(results, categoryId,
@@ -149,14 +158,16 @@ public class UiController {
     }
 
     @GetMapping("/contactUsManagement")
-    public String contactUsManagement(Model model) {
+    public String contactUsManagement(Model model, HttpServletRequest request) {
+        if (!adminService.isAdmin(request)) return "redirect:/";
         List<Contact> contacts = adminService.getAllContacts();
         model.addAttribute("contacts", contacts);
         return "adminContact";
     }
 
     @GetMapping("/questionManagement")
-    public String questionManagement(Model model) {
+    public String questionManagement(Model model, HttpServletRequest request) {
+        if (!adminService.isAdmin(request)) return "redirect:/";
         List<QuestionDTO> questions = adminService.getAllQuestionsDTO();
         model.addAttribute("questions", questions);
         return "adminQuestionManagement";
@@ -164,7 +175,8 @@ public class UiController {
 
     @GetMapping("/admin/editQuestion")
     public String editQuestion(@RequestParam("questionId") int questionId,
-                               Model model) {
+                               Model model, HttpServletRequest request) {
+        if (!adminService.isAdmin(request)) return "redirect:/";
         Question question = questionDAO.getQuestion(questionId);
         List<Choice> choices = choiceDAO.getChoicesByQuestionId(questionId);
         model.addAttribute("choices", choices);
@@ -174,7 +186,8 @@ public class UiController {
     }
 
     @GetMapping("/admin/addQuestion")
-    public String addQuestion(Model model) {
+    public String addQuestion(Model model, HttpServletRequest request) {
+        if (!adminService.isAdmin(request)) return "redirect:/";
         List<Category> categories = quizService.getAllCategories();
         model.addAttribute("categories", categories);
         return "newQuestion";
