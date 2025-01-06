@@ -10,6 +10,9 @@
 <%@include file="navbar.jsp" %>
 <div class="container mt-5">
     <h3 class="text-center mb-4">Manage Questions</h3>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="${pageContext.request.contextPath}/admin/addQuestion" class="btn btn-primary">Add New Question</a>
+    </div>
     <table class="table table-bordered">
         <thead>
         <tr>

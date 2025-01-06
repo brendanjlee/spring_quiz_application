@@ -172,4 +172,11 @@ public class UiController {
 
         return "editQuestion";
     }
+
+    @GetMapping("/admin/addQuestion")
+    public String addQuestion(Model model) {
+        List<Category> categories = quizService.getAllCategories();
+        model.addAttribute("categories", categories);
+        return "newQuestion";
+    }
 }

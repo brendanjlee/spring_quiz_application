@@ -27,6 +27,13 @@ public class ChoiceDAO {
         jdbcTemplate.update(query, questionId, text, isAnswer);
     }
 
+    public void createChoice(Choice choice) {
+        String query = "INSERT INTO choice (question_id, text, is_answer) " +
+                "VALUES (?, ?, ?)";
+        jdbcTemplate.update(query, choice.getQuestionId(), choice.getText(),
+                choice.isAnswer());
+    }
+
     // get answer choice by id
     public Choice getChoice(int id) {
         String query = "SELECT * FROM choice WHERE question_id = ?";

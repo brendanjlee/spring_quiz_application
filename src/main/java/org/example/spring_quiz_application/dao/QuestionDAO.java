@@ -4,9 +4,15 @@ import org.example.spring_quiz_application.dao.rowMapper.QuestionRowMapper;
 import org.example.spring_quiz_application.domain.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class QuestionDAO {
@@ -24,6 +30,21 @@ public class QuestionDAO {
         String query = "INSERT INTO question (category_id, text, is_active) " +
                 "VALUES (?, ?, ?)";
         jdbcTemplate.update(query, categoryId, text, isActive);
+    }
+
+    // create new question with object
+    public int addQuestion(Question question) {
+        String query = "INSERT INTO question (category_id, text) VALUES (?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query,
+                    Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, question.getCategoryId());
+            ps.setString(2, question.getText());
+            return ps;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
     // get all questions

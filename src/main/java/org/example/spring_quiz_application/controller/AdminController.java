@@ -121,4 +121,50 @@ public class AdminController {
 
         return "redirect:/questionManagement";
     }
+
+    @PostMapping("/saveNewQuestion")
+    public String saveNewQuestion(@RequestParam("categoryId") int categoryId,
+                                  @RequestParam("text") String text,
+                                  @RequestParam Map<String, String> choices) {
+        Question question = new Question();
+        question.setCategoryId(categoryId);
+        question.setText(text);
+
+        // do choices
+        List<Choice> choiceList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : choices.entrySet()) {
+            if (entry.getKey().startsWith("choices")) {
+                String[] parts = entry.getKey().split("\\.");
+                String choiceIdString = parts[0];
+                String[] choiceParts = choiceIdString.split("[\\[\\]]");
+                int index = Integer.parseInt(choiceParts[1]);
+                String field = parts[1];
+
+                Choice choice = choiceList.stream()
+                        .filter(c -> c.getId() == index)
+                        .findFirst()
+                        .orElseGet(() -> {
+                            Choice newChoice = new Choice();
+                            newChoice.setId(index);
+                            choiceList.add(newChoice);
+                            return newChoice;
+                        });
+                if (field.equals("text")) {
+                    choice.setText(entry.getValue());
+                } else if (field.equals("isAnswer")) {
+                    choice.setAnswer(true);
+                }
+            }
+        }
+
+
+        // set question
+        int questionId = questionDAO.addQuestion(question);
+        for (Choice choice : choiceList) {
+            choice.setQuestionId(questionId);
+            choiceDAO.createChoice(choice);
+        }
+
+        return "redirect:/questionManagement";
+    }
 }

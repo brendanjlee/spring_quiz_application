@@ -10,7 +10,7 @@
 <%@include file="navbar.jsp" %>
 <div class="container mt-5">
     <h3>Edit Question</h3>
-    <form method="post" action="${pageContext.request.contextPath}/api/admin/saveQuestion">
+    <form method="post" action="${pageContext.request.contextPath}/admin/saveQuestion">
         <input type="hidden" name="questionId" value="${question.id}"/>
         <div class="mb-3">
             <label for="text" class="form-label">Question Text</label>
