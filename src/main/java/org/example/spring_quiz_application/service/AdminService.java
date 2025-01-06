@@ -22,6 +22,7 @@ public class AdminService {
     private final ChoiceDAO choiceDAO;
     private final QuizQuestionDAO quizQuestionDAO;
     private final UserDAO userDAO;
+    private final ContactDAO contactDAO;
     QuizService quizService;
 
     @Autowired
@@ -31,7 +32,7 @@ public class AdminService {
             , ChoiceDAO choiceDAO
             , QuizQuestionDAO quizQuestionDAO
             , UserDAO userDAO
-            , QuizService quizService) {
+            , QuizService quizService, ContactDAO contactDAO) {
         this.categoryDAO = categoryDAO;
         this.quizResultDAO = quizResultDAO;
         this.questionDAO = questionDAO;
@@ -39,6 +40,7 @@ public class AdminService {
         this.quizQuestionDAO = quizQuestionDAO;
         this.userDAO = userDAO;
         this.quizService = quizService;
+        this.contactDAO = contactDAO;
     }
 
     public List<User> getAllUsers() {
@@ -106,5 +108,9 @@ public class AdminService {
                     return matchesCat && matchesUser;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<Contact> getAllContacts() {
+        return contactDAO.getAllContacts();
     }
 }

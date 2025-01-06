@@ -18,6 +18,7 @@ public class ContactRowMapper implements RowMapper<Contact> {
         contact.setEmail(rs.getString("email"));
         contact.setTimeSubmitted(rs.getObject("time_submitted",
                 LocalDateTime.class));
+        contact.setMessage(rs.getString("message"));
         return contact;
     }
 }
