@@ -60,4 +60,10 @@ public class QuestionDAO {
         String query = "UPDATE question SET is_active = true WHERE id = ?";
         jdbcTemplate.update(query, questionId);
     }
+
+    public void updateQuestion(int questionId, String text) {
+        String query = "UPDATE question SET text = ? WHERE id " +
+                "= ?";
+        jdbcTemplate.update(query, text, questionId);
+    }
 }

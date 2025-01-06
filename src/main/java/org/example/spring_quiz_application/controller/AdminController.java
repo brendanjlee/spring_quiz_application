@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/admin")
@@ -18,18 +21,19 @@ public class AdminController {
     private final UserDAO userDAO;
     private final ContactDAO contactDAO;
     private final QuestionDAO questionDAO;
+    private final ChoiceDAO choiceDAO;
 
     public AdminController(UserDAO userDAO, ContactDAO contactDAO,
-                           QuestionDAO questionDAO) {
+                           QuestionDAO questionDAO, ChoiceDAO choiceDAO) {
         this.userDAO = userDAO;
         this.contactDAO = contactDAO;
         this.questionDAO = questionDAO;
+        this.choiceDAO = choiceDAO;
     }
 
     @PostMapping("toggleActiveStatus")
     public String toggleActiveStatus(@RequestParam("userId") int userId,
                                      HttpServletRequest request) {
-        System.out.println("toggleActiveStatus");
         HttpSession session = request.getSession(false);
         if (session.getAttribute("user") == null) {
             System.out.println("No active user in session");
@@ -68,6 +72,51 @@ public class AdminController {
             questionDAO.disableQuestion(questionId);
         } else {
             questionDAO.enableQuestion(questionId);
+        }
+
+        return "redirect:/questionManagement";
+    }
+
+    @PostMapping("/saveQuestion")
+    public String saveQuestion(@RequestParam("questionId") int questionId,
+                               @RequestParam("text") String text,
+                               @RequestParam Map<String, String> choices) {
+        // process the choices
+        List<Choice> choiceList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : choices.entrySet()) {
+            if (entry.getKey().startsWith("choices")) {
+                String[] parts = entry.getKey().split("\\.");
+                String choiceIdString = parts[0];
+                String[] choiceParts = choiceIdString.split("[\\[\\]]");
+                int choiceId = Integer.parseInt(choiceParts[1]);
+                String field = parts[1];
+
+                // find or create choice
+                Choice choice = choiceList.stream()
+                        .filter(c -> c.getId() == choiceId)
+                        .findFirst()
+                        .orElseGet(() -> {
+                            Choice newChoice = new Choice();
+                            newChoice.setId(choiceId);
+                            newChoice.setQuestionId(questionId);
+                            choiceList.add(newChoice);
+                            return newChoice;
+                        });
+                // set values
+                if (field.equals("text")) {
+                    choice.setText(entry.getValue());
+                } else if (field.equals("isAnswer")) {
+                    choice.setAnswer(true);
+                }
+            }
+        }
+
+        // update question text
+        questionDAO.updateQuestion(questionId, text);
+
+        // update choices
+        for (Choice choice : choiceList) {
+            choiceDAO.updateChoice(choice);
         }
 
         return "redirect:/questionManagement";

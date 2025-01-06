@@ -6,6 +6,7 @@ import org.example.spring_quiz_application.dao.*;
 import org.example.spring_quiz_application.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -131,4 +132,5 @@ public class AdminService {
 
         return res;
     }
+
 }

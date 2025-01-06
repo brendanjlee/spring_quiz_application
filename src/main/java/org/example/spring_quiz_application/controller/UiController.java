@@ -2,6 +2,8 @@ package org.example.spring_quiz_application.controller;
 
 import org.example.spring_quiz_application.DTO.QuestionDTO;
 import org.example.spring_quiz_application.DTO.QuizResultPageDTO;
+import org.example.spring_quiz_application.dao.ChoiceDAO;
+import org.example.spring_quiz_application.dao.QuestionDAO;
 import org.example.spring_quiz_application.domain.*;
 import org.example.spring_quiz_application.service.AdminService;
 import org.example.spring_quiz_application.service.QuizService;
@@ -21,18 +23,23 @@ import java.util.List;
 public class UiController {
     private final QuizService quizService;
     private final AdminService adminService;
+    private final QuestionDAO questionDAO;
+    private final ChoiceDAO choiceDAO;
 
     @Autowired
-    public UiController(QuizService quizService, AdminService adminService) {
+    public UiController(QuizService quizService, AdminService adminService,
+                        QuestionDAO questionDAO, ChoiceDAO choiceDAO) {
         this.quizService = quizService;
         this.adminService = adminService;
+        this.questionDAO = questionDAO;
+        this.choiceDAO = choiceDAO;
     }
 
     @GetMapping("/")
     public String index(Model model, HttpServletRequest request) {
         // redirect to log in if user is not in session
         HttpSession session = request.getSession(false);
-        if (session == null) {
+        if (session == null || session.getAttribute("user") == null) {
             return "redirect:/login";
         }
 
@@ -153,5 +160,16 @@ public class UiController {
         List<QuestionDTO> questions = adminService.getAllQuestionsDTO();
         model.addAttribute("questions", questions);
         return "adminQuestionManagement";
+    }
+
+    @GetMapping("/admin/editQuestion")
+    public String editQuestion(@RequestParam("questionId") int questionId,
+                               Model model) {
+        Question question = questionDAO.getQuestion(questionId);
+        List<Choice> choices = choiceDAO.getChoicesByQuestionId(questionId);
+        model.addAttribute("choices", choices);
+        model.addAttribute("question", question);
+
+        return "editQuestion";
     }
 }
