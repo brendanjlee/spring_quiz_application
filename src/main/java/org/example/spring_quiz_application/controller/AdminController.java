@@ -17,10 +17,13 @@ import java.time.LocalDateTime;
 public class AdminController {
     private final UserDAO userDAO;
     private final ContactDAO contactDAO;
+    private final QuestionDAO questionDAO;
 
-    public AdminController(UserDAO userDAO, ContactDAO contactDAO) {
+    public AdminController(UserDAO userDAO, ContactDAO contactDAO,
+                           QuestionDAO questionDAO) {
         this.userDAO = userDAO;
         this.contactDAO = contactDAO;
+        this.questionDAO = questionDAO;
     }
 
     @PostMapping("toggleActiveStatus")
@@ -56,5 +59,17 @@ public class AdminController {
                                 Model model) {
         contactDAO.createContact(subject, message, email);
         return "redirect:/contact";
+    }
+
+    @PostMapping("toggleActiveStatus/question")
+    public String toggleQuestionActiveStatus(@RequestParam("questionId") int questionId) {
+        Question question = questionDAO.getQuestion(questionId);
+        if (question.isActive()) {
+            questionDAO.disableQuestion(questionId);
+        } else {
+            questionDAO.enableQuestion(questionId);
+        }
+
+        return "redirect:/questionManagement";
     }
 }

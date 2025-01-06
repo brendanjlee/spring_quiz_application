@@ -1,5 +1,6 @@
 package org.example.spring_quiz_application.controller;
 
+import org.example.spring_quiz_application.DTO.QuestionDTO;
 import org.example.spring_quiz_application.DTO.QuizResultPageDTO;
 import org.example.spring_quiz_application.domain.*;
 import org.example.spring_quiz_application.service.AdminService;
@@ -145,5 +146,12 @@ public class UiController {
         List<Contact> contacts = adminService.getAllContacts();
         model.addAttribute("contacts", contacts);
         return "adminContact";
+    }
+
+    @GetMapping("/questionManagement")
+    public String questionManagement(Model model) {
+        List<QuestionDTO> questions = adminService.getAllQuestionsDTO();
+        model.addAttribute("questions", questions);
+        return "adminQuestionManagement";
     }
 }

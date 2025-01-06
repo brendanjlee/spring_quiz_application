@@ -1,5 +1,6 @@
 package org.example.spring_quiz_application.service;
 
+import org.example.spring_quiz_application.DTO.QuestionDTO;
 import org.example.spring_quiz_application.DTO.QuizResultPageDTO;
 import org.example.spring_quiz_application.dao.*;
 import org.example.spring_quiz_application.domain.*;
@@ -112,5 +113,22 @@ public class AdminService {
 
     public List<Contact> getAllContacts() {
         return contactDAO.getAllContacts();
+    }
+
+    public List<QuestionDTO> getAllQuestionsDTO() {
+        List<QuestionDTO> res = new ArrayList<>();
+        List<Question> questions = questionDAO.getAllQuestions();
+
+        questions.forEach(question -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            questionDTO.setQuestionId(question.getId());
+            questionDTO.setText(question.getText());
+            questionDTO.setActive(question.isActive());
+            questionDTO.setCategoryName(quizService.getCategoryNameById(question.getCategoryId()));
+
+            res.add(questionDTO);
+        });
+
+        return res;
     }
 }

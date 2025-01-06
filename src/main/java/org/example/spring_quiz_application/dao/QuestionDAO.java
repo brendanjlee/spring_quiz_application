@@ -50,6 +50,14 @@ public class QuestionDAO {
         jdbcTemplate.update(query, questionId);
     }
 
-    // todo: get choices by question ID
-    // todo: get answer choice by question ID
+    // toggle question
+    public void disableQuestion(int questionId) {
+        String query = "UPDATE question SET is_active = false WHERE id = ?";
+        jdbcTemplate.update(query, questionId);
+    }
+
+    public void enableQuestion(int questionId) {
+        String query = "UPDATE question SET is_active = true WHERE id = ?";
+        jdbcTemplate.update(query, questionId);
+    }
 }
