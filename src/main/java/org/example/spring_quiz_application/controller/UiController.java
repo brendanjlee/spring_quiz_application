@@ -143,7 +143,6 @@ public class UiController {
     @GetMapping("/contactUsManagement")
     public String contactUsManagement(Model model) {
         List<Contact> contacts = adminService.getAllContacts();
-        System.out.println(contacts);
         model.addAttribute("contacts", contacts);
         return "adminContact";
     }

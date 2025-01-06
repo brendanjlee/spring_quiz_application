@@ -29,7 +29,7 @@
                 <td>${contact.email}</td>
                     <%--                <td><fmt:formatDate value="${contact.timeSubmitted}" pattern="yyyy-MM-dd HH:mm:ss"/></td>--%>
                 <td>${contact.timeSubmitted}</td>
-                <td>${contact.message}</td>
+                <td style="max-width: 200px">${contact.message}</td>
             </tr>
         </c:forEach>
         </tbody>

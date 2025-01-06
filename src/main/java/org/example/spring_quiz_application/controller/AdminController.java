@@ -3,20 +3,24 @@ package org.example.spring_quiz_application.controller;
 import org.example.spring_quiz_application.domain.*;
 import org.example.spring_quiz_application.dao.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/api/admin")
 public class AdminController {
     private final UserDAO userDAO;
+    private final ContactDAO contactDAO;
 
-    public AdminController(UserDAO userDAO) {
+    public AdminController(UserDAO userDAO, ContactDAO contactDAO) {
         this.userDAO = userDAO;
+        this.contactDAO = contactDAO;
     }
 
     @PostMapping("toggleActiveStatus")
@@ -43,5 +47,14 @@ public class AdminController {
         }
 
         return "redirect:/userManagement";
+    }
+
+    @PostMapping("submitContact")
+    public String submitContact(@RequestParam("email") String email,
+                                @RequestParam("subject") String subject,
+                                @RequestParam("message") String message,
+                                Model model) {
+        contactDAO.createContact(subject, message, email);
+        return "redirect:/contact";
     }
 }

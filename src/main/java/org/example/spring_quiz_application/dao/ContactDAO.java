@@ -31,7 +31,7 @@ public class ContactDAO {
 
     // get all contacts
     public List<Contact> getAllContacts() {
-        String query = "select * from Contact";
+        String query = "select * from Contact order by time_submitted desc";
         return jdbcTemplate.query(query, rowMapper);
     }
 

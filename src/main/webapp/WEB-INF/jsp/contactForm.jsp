@@ -17,7 +17,7 @@
                     <h3>Contact Us</h3>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="api/contactUs">
+                    <form method="post" action="${pageContext.request.contextPath}/api/admin/submitContact">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email" required>
@@ -28,7 +28,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="message" class="form-label">Message</label>
-                            <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                            <textarea class="form-control" id="message" name="message" rows="6" maxlength="500"
+                                      required></textarea>
                         </div>
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">Submit</button>
