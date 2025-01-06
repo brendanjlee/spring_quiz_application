@@ -14,7 +14,7 @@
                 <c:when test="${not empty sessionScope.user}">
                     <form action="${pageContext.request.contextPath}/api/auth/logout" method="post">
                         <button type="submit" class="nav-link" style="background: none; border: none; color: inherit;">
-                            Logout
+                            Logout (${sessionScope.user.firstName})
                         </button>
                     </form>
                 </c:when>

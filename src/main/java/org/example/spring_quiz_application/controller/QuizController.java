@@ -30,7 +30,7 @@ public class QuizController {
     @GetMapping
     public String getQuiz(Model model, HttpServletRequest request) {
 
-        // redirect to login if no user
+        // redirect to log in if no user
         HttpSession session = request.getSession();
         if (session.getAttribute("user") == null) {
             return "redirect:/login";
@@ -51,10 +51,12 @@ public class QuizController {
         // use service to get question id and get choices
         List<Question> questions =
                 quizService.getAllQuestionsByCategoryId(categoryId);
+        Collections.shuffle(questions);
 
         for (Question question : questions) {
             List<Choice> choices =
                     quizService.getAllChoicesByQuestionId(question.getId());
+            Collections.shuffle(choices);
             question.setChoices(choices);
         }
 
@@ -92,16 +94,17 @@ public class QuizController {
                 "startTime");
         LocalDateTime endTime = LocalDateTime.now();
 
-        System.out.println("====Submit====\n" + quizAnswers.toString());
-        System.out.println("User ID: " + user.getId());
-        System.out.println("Category ID: " + categoryId);
-        System.out.println("Start Time: " + startTime);
-        System.out.println("End Time: " + endTime);
+//        System.out.println("====Submit====\n" + quizAnswers.toString());
+//        System.out.println("User ID: " + user.getId());
+//        System.out.println("Category ID: " + categoryId);
+//        System.out.println("Start Time: " + startTime);
+//        System.out.println("End Time: " + endTime);
 
         // process quiz and redirect to results
-        quizService.submitQuiz(user.getId(), categoryId, startTime, endTime,
+        int quizResultId = quizService.submitQuiz(user.getId(), categoryId,
+                startTime, endTime,
                 quizAnswers);
 
-        return "wopw";
+        return "redirect:/quiz/result/" + quizResultId;
     }
 }

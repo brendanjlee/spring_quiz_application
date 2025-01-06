@@ -2,10 +2,7 @@ package org.example.spring_quiz_application.service;
 
 import org.apache.tomcat.jni.Local;
 import org.example.spring_quiz_application.dao.*;
-import org.example.spring_quiz_application.domain.Category;
-import org.example.spring_quiz_application.domain.Choice;
-import org.example.spring_quiz_application.domain.Question;
-import org.example.spring_quiz_application.domain.QuizResult;
+import org.example.spring_quiz_application.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +38,11 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    public QuizResult getQuizResultById(int id) {
+        return quizResultDAO.getQuizResultById(id);
+    }
+
+    @Override
     public String getCategoryNameById(int id) {
         Category c = categoryDAO.getCategoryById(id);
         return c.getName();
@@ -55,9 +57,9 @@ public class QuizServiceImpl implements QuizService {
             quizResult.setCategoryName(getCategoryNameById(quizResult.getCategoryId()));
         });
 
-
         return quizResults;
     }
+
 
     @Override
     public List<Question> getAllQuestionsByCategoryId(int categoryId) {
@@ -70,9 +72,9 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    public void submitQuiz(int userId, int categoryId, LocalDateTime timeStart,
-                           LocalDateTime timeEnd,
-                           Map<Integer, Integer> quizAnswers) {
+    public int submitQuiz(int userId, int categoryId, LocalDateTime timeStart,
+                          LocalDateTime timeEnd,
+                          Map<Integer, Integer> quizAnswers) {
         // create a new quiz result
         int resultId = quizResultDAO.createQuizResult(userId, categoryId,
                 timeStart, timeEnd);
@@ -84,7 +86,29 @@ public class QuizServiceImpl implements QuizService {
             quizQuestionDAO.createQuizQuestion(resultId, question_id,
                     choice_id);
         });
+        return resultId;
     }
 
+    @Override
+    public void mapChoicesToQuestions(List<Question> questions) {
+        questions.forEach(question -> {
+            List<Choice> choices = getAllChoicesByQuestionId(question.getId());
+            // for each choice, mark whether it was user answer
 
+            question.setChoices(choices);
+            //System.out.println(question.toString());
+        });
+    }
+
+    @Override
+    public void mapQuizQuestionsToChoices(Choice choice, int quizResultId) {
+        // get quiz questions for the result
+        List<QuizQuestion> quizQuestions =
+                quizQuestionDAO.getAllQuizQuestions(quizResultId);
+        for (QuizQuestion quizQuestion : quizQuestions) {
+            if (quizQuestion.getUserChoiceId() == choice.getId()) {
+                choice.setUserAnswer(true);
+            }
+        }
+    }
 }

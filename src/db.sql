@@ -282,8 +282,7 @@ VALUES (3, 'Which fruit is known as the king of fruits?', TRUE),
        (3, 'Which nut is used to make marzipan?', TRUE),
        (3, 'What type of bread is used in a traditional Reuben sandwich?', TRUE),
        (3, 'What fruit has its seeds on the outside?', TRUE),
-       (3, 'What is the main ingredient in hummus?', TRUE),
-       (3, "Shold you boil chicken breast?", false);
+       (3, 'What is the main ingredient in hummus?', TRUE);
 
 INSERT INTO choice (question_id, text, is_answer)
 VALUES
@@ -343,40 +342,40 @@ insert into quiz_result (user_id, category_id, time_start, time_end)
 VALUES (1, 1, '2024-12-30 16:48:55', '2024-12-30 16:55:55');
 insert into quiz_question (id, quiz_result_id, question_id, user_choice_id)
 VALUES (1, 1, 1, 1),
-       (2, 1, 2, 2),
-       (3, 1, 3, 3),
-       (4, 1, 4, 4),
-       (5, 1, 5, 1),
-       (6, 1, 6, 2),
-       (7, 1, 7, 3),
-       (8, 1, 8, 4),
-       (9, 1, 9, 1),
-       (10, 1, 10, 2);
+       (2, 1, 2, 5),
+       (3, 1, 3, 9),
+       (4, 1, 4, 13),
+       (5, 1, 5, 17),
+       (6, 1, 6, 21),
+       (7, 1, 7, 25),
+       (8, 1, 8, 29),
+       (9, 1, 9, 33),
+       (10, 1, 10, 39);
 
 insert into quiz_result (id, user_id, category_id, time_start, time_end)
 VALUES (2, 1, 2, '2024-12-31 16:48:55', '2024-12-31 16:55:55');
-insert into quiz_question (quiz_result_id, question_id, user_choice_id)
-VALUES (2, 1, 4),
-       (2, 2, 3),
-       (2, 3, 2),
-       (2, 4, 1),
-       (2, 5, 1),
-       (2, 6, 2),
-       (2, 7, 3),
-       (2, 8, 4),
-       (2, 9, 5),
-       (2, 10, 6);
+insert into quiz_question (id, quiz_result_id, question_id, user_choice_id)
+VALUES (11, 2, 11, 41),
+       (12, 2, 12, 45),
+       (13, 2, 13, 49),
+       (14, 2, 14, 53),
+       (15, 2, 15, 57),
+       (16, 2, 16, 61),
+       (17, 2, 17, 65),
+       (18, 2, 18, 69),
+       (19, 2, 19, 73),
+       (20, 2, 20, 78);
 
 insert into quiz_result (id, user_id, category_id, time_start, time_end)
 VALUES (3, 1, 3, '2024-12-31 19:48:55', '2024-12-31 19:55:55');
-insert into quiz_question (quiz_result_id, question_id, user_choice_id)
-VALUES (3, 1, 4),
-       (3, 2, 1),
-       (3, 3, 2),
-       (3, 4, 3),
-       (3, 5, 4),
-       (3, 6, 3),
-       (3, 7, 2),
-       (3, 8, 1),
-       (3, 9, 1),
-       (3, 10, 2);
+insert into quiz_question (id, quiz_result_id, question_id, user_choice_id)
+VALUES (21, 3, 21, 81),
+       (22, 3, 22, 85),
+       (23, 3, 23, 89),
+       (24, 3, 24, 93),
+       (25, 3, 25, 97),
+       (26, 3, 26, 101),
+       (27, 3, 27, 105),
+       (28, 3, 28, 109),
+       (29, 3, 29, 113),
+       (30, 3, 30, 117);

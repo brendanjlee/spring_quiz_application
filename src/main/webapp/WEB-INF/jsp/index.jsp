@@ -32,7 +32,8 @@
                                 <td>${quizResult.categoryName}</td>
                                 <td>${quizResult.timeStart}</td>
                                 <td>
-                                    <a href="/quiz/result/${quizResult.id}" class="btn btn-primary btn-sm">View
+                                    <a href="${pageContext.request.contextPath}/quiz/result/${quizResult.id}"
+                                       class="btn btn-primary btn-sm">View
                                         Result</a>
                                 </td>
                             </tr>

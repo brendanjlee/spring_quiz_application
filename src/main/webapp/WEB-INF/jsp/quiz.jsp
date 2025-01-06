@@ -16,7 +16,7 @@
 </div>
 
 <!-- Quiz Form -->
-<form method="post" action="quiz/submitQuiz" id="quizForm">
+<form method="post" action="${pageContext.request.contextPath}/api/quiz/submitQuiz" id="quizForm">
     <div class="container mt-4">
 
         <!-- Loop through each quiz question -->
@@ -31,7 +31,7 @@
                         <div class="form-check">
                             <!-- Display the radio button for each choice -->
                             <input class="form-check-input" type="radio" name="question_${question.id}"
-                                   id="choice_${choice.id}" value="${choice.id}">
+                                   id="choice_${choice.id}" value="${choice.id}" required>
                             <label class="form-check-label" for="choice_${choice.id}">
                                     ${choice.text}
                             </label>

@@ -16,12 +16,18 @@ public interface QuizService {
 
     List<Category> getAllCategories();
 
+    QuizResult getQuizResultById(int id);
+
     List<QuizResult> getAllQuizResultsByUserId(int userId);
 
     List<Question> getAllQuestionsByCategoryId(int categoryId);
 
     List<Choice> getAllChoicesByQuestionId(int questionId);
 
-    void submitQuiz(int userId, int categoryId, LocalDateTime timeStart,
-                    LocalDateTime timeEnd, Map<Integer, Integer> quizAnswers);
+    int submitQuiz(int userId, int categoryId, LocalDateTime timeStart,
+                   LocalDateTime timeEnd, Map<Integer, Integer> quizAnswers);
+
+    void mapChoicesToQuestions(List<Question> questions);
+
+    void mapQuizQuestionsToChoices(Choice choice, int quizResultId);
 }
