@@ -52,7 +52,7 @@ public class QuizServiceImpl implements QuizService {
                 quizResultDAO.getQuizResultsByUserId(userId);
 
         quizResults.forEach(quizResult -> {
-            quizResult.setCategoryName(getCategoryNameById(quizResult.getId()));
+            quizResult.setCategoryName(getCategoryNameById(quizResult.getCategoryId()));
         });
 
 
