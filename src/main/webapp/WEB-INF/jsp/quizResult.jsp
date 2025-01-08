@@ -57,7 +57,7 @@
         </c:forEach>
     </div>
     <div class="text-center">
-        <a href="/" class="btn btn-primary">Back to Home</a>
+        <a href="/" class="btn btn-primary">Take Another Quiz</a>
     </div>
 </div>
 

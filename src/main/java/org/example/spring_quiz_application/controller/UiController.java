@@ -43,12 +43,16 @@ public class UiController {
             return "redirect:/login";
         }
 
+
         // get all quiz categories
         List<Category> categories = quizService.getAllCategories();
         model.addAttribute("categories", categories);
 
         // get recent quizzes for logged in user
         User user = (User) session.getAttribute("user");
+        // suspended
+        if (!user.isActive()) return "redirect:/";
+
         List<QuizResult> quizResults =
                 quizService.getAllQuizResultsByUserId(user.getId());
 
@@ -117,10 +121,11 @@ public class UiController {
     public String admin(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return "redirect:/";
         }
+
         User user = (User) session.getAttribute("user");
-        if (!user.isAdmin()) return "redirect:/login";
+        if (!user.isAdmin()) return "redirect:/";
         return "adminHome";
     }
 
