@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.Response;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,7 +21,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> postLogin(@RequestParam("email") String email,
                                             @RequestParam("password") String password) {
-        Utilities.logApi(baseUrl, "login");
+        Utilities.logApiWithMethod("POST", baseUrl, "login");
 
         // authenticate
 
@@ -34,7 +33,7 @@ public class AuthController {
                                                @RequestParam("first_name") String firstName,
                                                @RequestParam("last_name") String last_name,
                                                Model model) {
-        Utilities.logApi(baseUrl, "register");
+        Utilities.logApiWithMethod("POST", baseUrl, "register");
 
         // register
 
@@ -44,7 +43,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<String> postLogout(HttpServletRequest request,
                                              Model model) {
-        Utilities.logApi(baseUrl, "logout");
+        Utilities.logApiWithMethod("POST", baseUrl, "logout");
 
         // logout
 
