@@ -1,26 +1,23 @@
 package org.example.spring_quiz_application.service;
 
-import org.example.spring_quiz_application.domain.User;
+import org.example.spring_quiz_application.model.User;
+import org.example.spring_quiz_application.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface UserService {
-    List<User> getAllUsers();
+@Service
+public class UserService {
+    private final UserRepository userRepository;
 
-    User getUserById(int id);
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    void createUser(String email, String firstName, String lastName,
-                    String passwordHash, boolean isAdmin, boolean isActive);
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
 
-    void updateUser(User user);
-
-    void deleteUser(int id);
-
-    void activateUser(int id);
-
-    void deactivateUser(int id);
-
-    void promoteUser(int id);
-
-    void demoteUser(int id);
 }
