@@ -1,22 +1,32 @@
 package org.example.spring_quiz_application.controller;
 
 import org.example.spring_quiz_application.model.Category;
+import org.example.spring_quiz_application.model.Contact;
 import org.example.spring_quiz_application.model.Question;
 import org.example.spring_quiz_application.model.User;
+import org.example.spring_quiz_application.service.ContactService;
 import org.example.spring_quiz_application.util.Utilities;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.ws.Response;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
+    private final ContactService contactService;
     private final String basePath = "/api/admin";
 
     // autowrire
+    @Autowired
+    public AdminController(ContactService contactService) {
+        this.contactService = contactService;
+    }
 
     /* USER Management */
     @GetMapping("users")
@@ -121,9 +131,20 @@ public class AdminController {
     }
 
     /* Contact Management */
-    @GetMapping("contacts")
+    @GetMapping("/contacts")
     public ResponseEntity<String> getContacts() {
         Utilities.logApiWithMethod("GET", basePath, "contacts");
+        return ResponseEntity.ok().body(null);
+    }
+
+    @PostMapping("/contacts")
+    public ResponseEntity<String> addContact(@RequestBody Map<String, String> body) {
+        Utilities.logApiWithMethod("POST", basePath, "contacts");
+
+        // create new with service
+        contactService.submitContact(body.get("email"), body.get("subject"),
+                body.get("message"), LocalDateTime.now());
+
         return ResponseEntity.ok().body(null);
     }
 }

@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "contact")
@@ -29,5 +30,5 @@ public class Contact {
     private String email;
 
     @Column(nullable = false, name = "time_submitted")
-    private LocalDate timeSubmitted;
+    private LocalDateTime timeSubmitted;
 }

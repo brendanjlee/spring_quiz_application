@@ -130,13 +130,32 @@ public class UiController {
     }
 
     @GetMapping("/contact")
-    public String contactUs() {
-        return "contactForm";
+    public String getContact() {
+        return "/contactForm";
     }
 
-    @GetMapping("/quiz")
-    public String quiz(Model model) {
-        return "quiz";
+    @PostMapping("/contact")
+    public String postContact(@RequestParam("email") String email,
+                              @RequestParam("subject") String subject,
+                              @RequestParam("message") String message) {
+        try {
+            Map<String, String> requestBody = new HashMap<>();
+            requestBody.put("email", email);
+            requestBody.put("subject", subject);
+            requestBody.put("message", message);
+
+            // create response entity
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    baseUrl + "api/admin/contacts", requestBody, String.class
+            );
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                System.out.println("Contact Message Created Successfully");
+            }
+            return "/contactForm";
+        } catch (Exception e) {
+            return "/contactForm";
+        }
     }
 
     @GetMapping("/placeHolder")
