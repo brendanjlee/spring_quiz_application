@@ -3,6 +3,7 @@ package org.example.spring_quiz_application.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -35,4 +36,9 @@ public class User {
 
     @Column(name = "is_active")
     private boolean isActive = true;
+
+    // relationship
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval =
+            true)
+    private List<QuizResult> quizResults;
 }
