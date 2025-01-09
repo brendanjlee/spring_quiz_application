@@ -1,8 +1,6 @@
 package org.example.spring_quiz_application.controller;
 
-import org.example.spring_quiz_application.model.Category;
 import org.example.spring_quiz_application.model.User;
-import org.example.spring_quiz_application.service.TestService;
 import org.example.spring_quiz_application.service.UserService;
 import org.example.spring_quiz_application.util.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
