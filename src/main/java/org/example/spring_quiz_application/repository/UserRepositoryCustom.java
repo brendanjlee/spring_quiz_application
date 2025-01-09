@@ -6,4 +6,10 @@ import java.util.List;
 
 public interface UserRepositoryCustom {
     List<User> findAllUsers();
+
+    User findUserById(int id);
+
+    User findUserByEmail(String email);
+
+    void createUser(User user);
 }

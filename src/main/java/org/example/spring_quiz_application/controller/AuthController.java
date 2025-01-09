@@ -1,52 +1,59 @@
 package org.example.spring_quiz_application.controller;
 
+import org.example.spring_quiz_application.model.User;
+import org.example.spring_quiz_application.service.AuthService;
 import org.example.spring_quiz_application.util.Utilities;
-import org.springframework.http.HttpRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    private final AuthService authService;
     private final String baseUrl = "/api/auth";
-    // autowire constructor with service
-    // auth_service
+
+    @Autowired
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<String> postLogin(@RequestParam("email") String email,
-                                            @RequestParam("password") String password) {
+    public ResponseEntity<User> postLogin(@RequestBody Map<String, String> body) {
         Utilities.logApiWithMethod("POST", baseUrl, "login");
 
         // authenticate
+        System.out.println(body.toString());
 
-        return ResponseEntity.ok("login");
+        User possibleUser = authService.authenticateUser(body.get("email"),
+                body.get("password"));
+
+        if (possibleUser != null) {
+            return ResponseEntity.ok(possibleUser);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> postRegister(@RequestParam("email") String email,
-                                               @RequestParam("first_name") String firstName,
-                                               @RequestParam("last_name") String last_name,
-                                               Model model) {
+    public ResponseEntity<String> postRegister(@RequestBody Map<String,
+            String> body) {
         Utilities.logApiWithMethod("POST", baseUrl, "register");
 
-        // register
+        // register with service
+        System.out.println(body.toString());
 
-        return ResponseEntity.ok("register");
-    }
+        boolean success = authService.registerUser(body.get("email"),
+                body.get("firstName"), body.get("lastName"), body.get(
+                        "password"));
 
-    @PostMapping("/logout")
-    public ResponseEntity<String> postLogout(HttpServletRequest request,
-                                             Model model) {
-        Utilities.logApiWithMethod("POST", baseUrl, "logout");
+        if (success) {
+            return ResponseEntity.ok("User registered successfully");
+        }
 
-        // logout
-
-        return ResponseEntity.ok("logout");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                "registration failed");
     }
 }

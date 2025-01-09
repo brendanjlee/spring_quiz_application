@@ -8,4 +8,10 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Integer>,
         UserRepositoryCustom {
     List<User> findAllUsers();
+
+    User findUserById(int id);
+
+    User findUserByEmail(String email);
+
+    void createUser(User user);
 }
