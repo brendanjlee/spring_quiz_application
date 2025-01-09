@@ -26,7 +26,8 @@ public class Category {
     private boolean isActive = true;
 
     // relationships
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<Question> questions;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)

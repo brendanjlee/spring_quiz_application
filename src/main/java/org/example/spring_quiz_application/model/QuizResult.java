@@ -35,6 +35,6 @@ public class QuizResult {
     private LocalDateTime timeEnd;
 
     // relationships
-    @OneToMany(mappedBy = "quiz_result", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "quizResult", cascade = CascadeType.ALL)
     private List<QuizQuestion> quizQuestions;
 }

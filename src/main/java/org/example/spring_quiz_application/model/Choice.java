@@ -21,6 +21,7 @@ public class Choice {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
+    @ToString.Exclude
     private Question question;
 
     @Column(nullable = false)
@@ -30,6 +31,7 @@ public class Choice {
     private boolean isAnswer = false;
 
     // relationships
-    @OneToMany(mappedBy = "choice", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userChoice", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<QuizQuestion> quizQuestions;
 }
