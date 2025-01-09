@@ -19,16 +19,6 @@ public class WebConfig implements WebMvcConfigurer {
     static final String PASSWORD = "root";
 
     @Bean
-    public DataSource quizDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(JDBC_DRIVER);
-        dataSource.setUrl(DB_URL);
-        dataSource.setUsername(USER);
-        dataSource.setPassword(PASSWORD);
-        return dataSource;
-    }
-
-    @Bean
     public InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver resolver =
                 new InternalResourceViewResolver();
