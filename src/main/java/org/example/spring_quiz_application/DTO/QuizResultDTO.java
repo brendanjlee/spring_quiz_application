@@ -1,9 +1,10 @@
 package org.example.spring_quiz_application.DTO;
 
 import lombok.*;
-import org.example.spring_quiz_application.model.QuizResult;
+import org.example.spring_quiz_application.model.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,11 +18,26 @@ public class QuizResultDTO {
     private LocalDateTime timeStart;
     private LocalDateTime timeEnd;
 
+    private List<QuestionDTO> questions;
+
+    public QuizResultDTO(int id, int userId, String categoryName,
+                         LocalDateTime timeStart, LocalDateTime timeEnd) {
+        this.id = id;
+        this.userId = userId;
+        this.categoryName = categoryName;
+        this.timeStart = timeStart;
+        this.timeEnd = timeEnd;
+    }
+
     public QuizResultDTO(QuizResult quizResult) {
         this.id = quizResult.getId();
         this.userId = quizResult.getUser().getId();
         this.categoryName = quizResult.getCategory().getName();
         this.timeStart = quizResult.getTimeStart();
         this.timeEnd = quizResult.getTimeEnd();
+    }
+
+    public void setQuestionsWithDTO(List<QuestionDTO> questions) {
+        this.questions = questions;
     }
 }

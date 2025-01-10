@@ -36,8 +36,9 @@ DROP TABLE IF EXISTS category;
 
 CREATE TABLE category
 (
-    id   INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL UNIQUE
+    id        INT PRIMARY KEY AUTO_INCREMENT,
+    name      VARCHAR(255) NOT NULL UNIQUE,
+    is_active BOOLEAN DEFAULT TRUE
 );
 
 -- question
@@ -72,10 +73,10 @@ DROP TABLE IF EXISTS quiz_result;
 CREATE TABLE quiz_result
 (
     id          INT PRIMARY KEY AUTO_INCREMENT,
-    user_id     INT         NOT NULL,
-    category_id INT         NOT NULL,
-    time_start  TIMESTAMP   NOT NULL,
-    time_end    TIMESTAMP   NOT NULL,
+    user_id     INT       NOT NULL,
+    category_id INT       NOT NULL,
+    time_start  TIMESTAMP NOT NULL,
+    time_end    TIMESTAMP NOT NULL,
 
     FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE,
     FOREIGN KEY (category_id) REFERENCES category (id) ON DELETE CASCADE
@@ -87,7 +88,7 @@ DROP TABLE IF EXISTS quiz_question;
 CREATE TABLE quiz_question
 (
     id             int PRIMARY KEY AUTO_INCREMENT,
-    quiz_result_id        int NOT NULL,
+    quiz_result_id int NOT NULL,
     question_id    int NOT NULL,
     user_choice_id int NOT NULL,
 
@@ -113,7 +114,7 @@ VALUES ('Firstname', 'Lastname', 'test@test.com', 'test', FALSE, TRUE),
        ('James', 'Taylor', 'jamestaylor456@cmail.com', 'hashedpassword8', FALSE, TRUE),
        ('Anna', 'Anderson', 'annaanderson789@coldmail.com', 'hashedpassword9', FALSE, TRUE),
        ('Chris', 'Moore', 'chrismoore321@bmail.com', 'hashedpassword10', FALSE, FALSE);
-       
+
 -- contact messages
 INSERT INTO contact (subject, message, email, time_submitted)
 VALUES ('Account Issue', 'I am unable to log into my account. Please help!', 'johndoe123@bmail.com',
@@ -345,12 +346,12 @@ VALUES (1, 1, 1, 1),
        (2, 1, 2, 5),
        (3, 1, 3, 9),
        (4, 1, 4, 13),
-       (5, 1, 5, 17),
-       (6, 1, 6, 21),
-       (7, 1, 7, 25),
-       (8, 1, 8, 29),
-       (9, 1, 9, 33),
-       (10, 1, 10, 39);
+       (5, 1, 5, 17);
+#        (6, 1, 6, 21),
+#        (7, 1, 7, 25),
+#        (8, 1, 8, 29),
+#        (9, 1, 9, 33),
+#        (10, 1, 10, 39);
 
 insert into quiz_result (id, user_id, category_id, time_start, time_end)
 VALUES (2, 2, 2, '2024-12-31 16:48:55', '2024-12-31 16:55:55');
@@ -358,13 +359,13 @@ insert into quiz_question (id, quiz_result_id, question_id, user_choice_id)
 VALUES (11, 2, 11, 41),
        (12, 2, 12, 45),
        (13, 2, 13, 49),
-       (14, 2, 14, 53),
-       (15, 2, 15, 57),
-       (16, 2, 16, 61),
-       (17, 2, 17, 65),
-       (18, 2, 18, 69),
-       (19, 2, 19, 73),
-       (20, 2, 20, 78);
+       (14, 2, 14, 53);
+#        (15, 2, 15, 57),
+#        (16, 2, 16, 61),
+#        (17, 2, 17, 65),
+#        (18, 2, 18, 69),
+#        (19, 2, 19, 73),
+#        (20, 2, 20, 78);
 
 insert into quiz_result (id, user_id, category_id, time_start, time_end)
 VALUES (3, 2, 3, '2024-12-31 19:48:55', '2024-12-31 19:55:55');
@@ -373,9 +374,9 @@ VALUES (21, 3, 21, 81),
        (22, 3, 22, 85),
        (23, 3, 23, 89),
        (24, 3, 24, 93),
-       (25, 3, 25, 97),
-       (26, 3, 26, 101),
-       (27, 3, 27, 105),
-       (28, 3, 28, 109),
-       (29, 3, 29, 113),
-       (30, 3, 30, 117);
+       (25, 3, 25, 97);
+#        (26, 3, 26, 101),
+#        (27, 3, 27, 105),
+#        (28, 3, 28, 109),
+#        (29, 3, 29, 113),
+#        (30, 3, 30, 117);

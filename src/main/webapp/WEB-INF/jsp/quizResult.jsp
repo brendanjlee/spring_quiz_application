@@ -33,7 +33,7 @@
                     <div class="list-group-item">
                         <p>
                             <c:choose>
-                                <c:when test="${choice.answer}">
+                                <c:when test="${choic   e.answer}">
                                     <strong>${choice.text}</strong>
                                 </c:when>
                                 <c:otherwise>

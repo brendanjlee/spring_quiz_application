@@ -11,10 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +57,7 @@ public class UiController {
             // get quiz results by user id
             ResponseEntity<List<QuizResultDTO>> quizResultResponse =
                     restTemplate.exchange(
-                            baseUrl + "api/quiz/results/" + user.getId(),
+                            baseUrl + "api/quiz/results/user/" + user.getId(),
                             HttpMethod.GET,
                             null,
                             new ParameterizedTypeReference<List<QuizResultDTO>>() {
@@ -193,6 +190,37 @@ public class UiController {
             return "/contactForm";
         } catch (Exception e) {
             return "/contactForm";
+        }
+    }
+
+    @GetMapping("/quiz/result/{quizResultId}")
+    public String getQuizResult(@PathVariable("quizResultId") String quizResultId, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        // redirect if not logged in
+        if (session == null || session.getAttribute("user") == null) {
+            System.out.println("session or user is null");
+            return "redirect:/login";
+        }
+
+        User user = (User) session.getAttribute("user");
+
+        // fetch from backend /api/quiz/results/{quizResultId}
+        // attach to model
+        // [] quizResult -> categoryName
+        // [] questions & questions.choices
+        try {
+            // session username
+            ResponseEntity<QuizResultDTO> response = restTemplate.getForEntity(
+                    baseUrl + "api/quiz/results/" + user.getId() + "/" + quizResultId, QuizResultDTO.class
+            );
+
+            QuizResultDTO quizResultDTO = response.getBody();
+            model.addAttribute("quizResult", quizResultDTO);
+
+            return "redirect:/quizResult";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/";
         }
     }
 

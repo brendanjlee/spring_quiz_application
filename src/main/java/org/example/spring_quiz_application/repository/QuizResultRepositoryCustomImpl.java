@@ -1,10 +1,13 @@
 package org.example.spring_quiz_application.repository;
 
+import org.example.spring_quiz_application.model.Choice;
+import org.example.spring_quiz_application.model.Question;
 import org.example.spring_quiz_application.model.QuizResult;
 import org.example.spring_quiz_application.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.util.Collections;
@@ -36,4 +39,36 @@ public class QuizResultRepositoryCustomImpl implements QuizResultRepositoryCusto
 
         return entityManager.createQuery(cq).getResultList();
     }
+
+    @Override
+    public QuizResult findQuizResultById(int quizResultId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<QuizResult> cq = cb.createQuery(QuizResult.class);
+        Root<QuizResult> root = cq.from(QuizResult.class);
+
+        cq.select(root).where(cb.equal(root.get("id"), quizResultId));
+        try {
+            QuizResult quizResult =
+                    entityManager.createQuery(cq).getSingleResult();
+            return quizResult;
+        } catch (NoResultException e) {
+            System.out.println("NoResultException: " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<Choice> findChoicesByQuestionId(int questionId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Choice> cq = cb.createQuery(Choice.class);
+        Root<Choice> root = cq.from(Choice.class);
+        cq.select(root).where(cb.equal(root.get("question").get("id"),
+                questionId));
+        try {
+            return entityManager.createQuery(cq).getResultList();
+        } catch (NoResultException e) {
+            return Collections.emptyList();
+        }
+    }
+
 }

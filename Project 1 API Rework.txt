@@ -1,0 +1,220 @@
++++++++++++++++++++++++++++++++++++++++
++ Requirements Per Page				  +
++++++++++++++++++++++++++++++++++++++++
+Nav Bar
+-----
+ [x] Home button (/)
+ [x] Login (/login)
+ [x] Logout (post request to frontend -> invalidate session)
+ [x] Register (/register)
+ [x] Contact Us (/contactUs)
+ 
+
+User
+-----
+Registration Page (/regiser)
+ [x] email, firstname, lastname, password, password confirmation
+ 
+Login Page (/login)
+ [x] user login funciton
+ 
+Home Page (/)
+ [x] should redirect to /login if no session
+ [x] quiz categories selection
+ [x] start quiz btn
+ [x] recent quiz reuslts table
+	post mappings from UI for something like /quizResult/{id} 
+
+Quiz Page (/quiz/{category_id})
+ [] display 5 multiple choice questions
+ [] randomly select 5 questions
+ [] submit quiz
+ Bonus:
+	[] different styles for answered and unanswered
+	[] short answer questions
+	[] countdown timer for quiz
+
+Quiz Result Page (/quiz/result/{quiz_result_id})
+ [] fields: quiz name, user full name, quiz start time, quiz end time, quiz result
+ [] result of each question
+ [] show question content
+ [] show choice content
+ 
+Contact Us (/contactUs)
+ [x] form for subject, email, and message
+ [x] no need to login
+
+
+Admin
+-----
+Admin Home (/admin)
+ [] Links
+	[] user management
+	[] quiz management
+	[] question management
+	[] contact us management
+ [] admin session only
+
+User Management (/admin/users)
+ [] Present full name, email, status, admin status
+
+Quiz Result Management (/admin/quizes)
+ [] Quiz Table
+	[] fields: start time, category, full name, number of questions, score
+	[] order by time
+	[] link to quiz result (/quiz/result/{quiz_result_id})
+	[] filters
+		[] filter by name
+		[] filter by email
+		[] filter by both
+ [] admin session only
+
+
+Question Management (/admin/questions)
+ [] Table
+	[] filter by category
+	[] sort by category
+	[] Question
+		[] Fields: category name, question desc, ...
+		[] Edit
+		[] Toggle
+ [] Add question (/admin/questions/new)
+	[] form for new question
+ [] admin session only
+	
+Contact Us (/admin/contactUs)
+ [] Table
+	[] link to each contact message (/admin/contactUs/{contact_id})
+	[] truncate text
+
+
+
+++++++++++++++++++++++++++++++++++++++++
++ Organized API                        +
+++++++++++++++++++++++++++++++++++++++++
+
+
+AuthenticationController
+------------------------
+ - POST /api/auth/login
+	- http://localhost:8081/api/auth/login?email=test@test.com&password=password
+ - POST /api/auth/register 
+	- http://localhost:8081/api/auth/register?email=test@test.com&first_name=bob&last_name=biden&password=password
+ - POST /api/auth/logout
+	- http://localhost:8081/api/auth/logout
+
+QuizController
+------------------------
+ - GET  /api/quiz/categories (get all quiz category names)
+	- http://localhost:8081/api/quiz/categories
+ - POST /api/quiz/start/{userId} (start a new quiz, be aware of user id)
+	- http://localhost:8081/api/quiz/start/1
+ - GET	/api/quiz/categories/{categoryId}/questions (get random questions, its choices for a quiz)
+	- http://localhost:8081/api/quiz/categories/1/questions
+ - POST /api/quiz/results (submit quiz result... user id?)
+ - GET  /api/quiz/results/{userId} (get a list of quiz results for user)
+	- return:
+		quizResults [
+			quizResult
+				id
+				user_id
+				category
+					name()
+		]
+			
+				
+ - GET  /api/quiz/results/{userId}/{quizResultId} (get a result of a specific quiz)
+
+UserController
+------------------------
+ - GET /api/user/{userId} get user
+ 
+AdminController
+------------------------
+User Management
+- GET   /api/admin/users (get all users)
+- PATCH /api/admin/users/{id}/status (toggle active status)
+- PATCH /api/admin/users/{id}/promote (promote to admin)
+- PATCH /api/admin/users/{id}/demote (demote to admin)
+Quiz Result Management
+ - GET /api/admin/quiz/categories (get all quiz category names)
+ - GET /api/admin/quiz/users (get all users) *** delete? ***
+ - GET /api/admin/quiz/results (get all quiz results)
+ - GET /api/admin/quiz/results/user/{id} (get results by User)
+ - GET /api/admin/quiz/results/category/{id} (get results by category)
+ - GET /api/quiz/results/user/{userId}/category/{categoryId} (get by result and category)
+Question Management
+ - GET   /api/admin/questions (get all questions)
+ - GET	 /api/admin/questions/{questionId} (get all questions & choices)
+ - POST  /api/admin/questions (create a new question)
+ - PUT   /api/admin/questions/{questionId} (edit a question)
+ - PATCH /api/admin/questions/{questionId} (toggle question status)
+Contact Management
+ - GET  /api/admin/contacts (get all contacts)
+ - POST /api/admin/contacts (post a new contact)
+ 
+ 
+ if i want to get data, should one controller make a call to another controller or 
+ use a service? -> NEVER DO IT. but UI to Backend is OKAY
+ 
+ 
+ 
+ == REST FLOW == 
+ When a call is made from the UI, frontend controller should call backend endpoint
+ 
+ 
+@RestController
+@RequestMapping("/api")
+public class AuthController {
+
+    @PostMapping("/login")
+    public ResponseEntity<String> postLogin(@RequestParam("userEmail") String email,
+                                            @RequestParam("password") String password,
+                                            HttpServletRequest request) {
+
+        Optional<User> possibleUser = authService.validateLogin(email, password);
+
+        if (possibleUser.isPresent()) {
+            HttpSession oldSession = request.getSession(false);
+            if (oldSession != null) {
+                oldSession.invalidate();
+            }
+
+            HttpSession newSession = request.getSession(true);
+            newSession.setAttribute("user", possibleUser.get());
+
+            return ResponseEntity.ok("Login successful"); // Or return some data if needed (e.g., user object or session info)
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+    }
+}
+
+@Controller
+public class UIController {
+
+    @GetMapping("/login")
+    public String login() {
+        return "login"; // Serve the login page
+    }
+
+    @PostMapping("/login")
+    public String handleLogin(@RequestParam("userEmail") String email,
+                               @RequestParam("password") String password,
+                               HttpServletRequest request) {
+
+        // Call the API to validate the login credentials
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/api/login", HttpMethod.POST, new HttpEntity<>(Map.of("userEmail", email, "password", password)),
+            String.class);
+
+        // Check the API response and decide where to redirect
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return "redirect:/"; // Redirect to home page if login is successful
+        }
+
+        // If login fails, redirect back to login page with error
+        request.setAttribute("errorMessage", "Invalid credentials");
+        return "login"; // Stay on login page
+    }
+}

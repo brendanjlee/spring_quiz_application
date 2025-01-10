@@ -27,12 +27,13 @@
                         </tr>
                         </thead>
                         <tbody>
+                            <%--                        todo update links--%>
                         <c:forEach var="quizResult" items="${quizResults}">
                             <tr>
                                 <td>${quizResult.categoryName}</td>
                                 <td>${quizResult.timeStart}</td>
                                 <td>
-                                    <a href="${pageContext.request.contextPath}/quiz/result/${quizResult.id}"
+                                    <a href="${pageContext.request.contextPath}/quiz/result/user/${quizResult.id}"
                                        class="btn btn-primary btn-sm">View
                                         Result</a>
                                 </td>
