@@ -1,5 +1,7 @@
 package org.example.spring_quiz_application.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,6 +23,7 @@ public class Choice {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
+    @JsonBackReference("question-choice")
     @ToString.Exclude
     private Question question;
 
@@ -33,5 +36,6 @@ public class Choice {
     // relationships
     @OneToMany(mappedBy = "userChoice", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonManagedReference("userChoice-quizQuestion")
     private List<QuizQuestion> quizQuestions;
 }

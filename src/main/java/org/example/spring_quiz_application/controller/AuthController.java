@@ -26,8 +26,6 @@ public class AuthController {
         Utilities.logApiWithMethod("POST", baseUrl, "login");
 
         // authenticate
-        System.out.println(body.toString());
-
         User possibleUser = authService.authenticateUser(body.get("email"),
                 body.get("password"));
 

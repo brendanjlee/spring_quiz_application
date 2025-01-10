@@ -1,8 +1,13 @@
 package org.example.spring_quiz_application.controller;
 
 
+import org.example.spring_quiz_application.DTO.QuizResultDTO;
+import org.example.spring_quiz_application.model.Category;
+import org.example.spring_quiz_application.model.QuizResult;
 import org.example.spring_quiz_application.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -27,14 +33,46 @@ public class UiController {
     @GetMapping("/")
     public String index(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        // redirect if not logged in
         if (session == null || session.getAttribute("user") == null) {
             System.out.println("session or user is null");
             return "redirect:/login";
         }
 
-        // fetch other category stuff
+        try {
+            // 1. fetch category names
+            ResponseEntity<List<Category>> categoryResponse =
+                    restTemplate.exchange(
+                            baseUrl + "api/quiz/categories",
+                            HttpMethod.GET,
+                            null,
+                            new ParameterizedTypeReference<List<Category>>() {
+                            }
+                    );
 
-        return "redirect:/placeHolder";
+            System.out.println(categoryResponse.getBody());
+            model.addAttribute("categories", categoryResponse.getBody());
+
+            // 2. fetch quiz results
+            User user = (User) session.getAttribute("user");
+            if (!user.isActive()) return "redirect:/login";
+
+            // get quiz results by user id
+            ResponseEntity<List<QuizResultDTO>> quizResultResponse =
+                    restTemplate.exchange(
+                            baseUrl + "api/quiz/results/" + user.getId(),
+                            HttpMethod.GET,
+                            null,
+                            new ParameterizedTypeReference<List<QuizResultDTO>>() {
+                            }
+                    );
+            model.addAttribute("quizResults", quizResultResponse.getBody());
+
+            return "index"; // todo change to index
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/login";
+        }
     }
 
     @GetMapping("/login")

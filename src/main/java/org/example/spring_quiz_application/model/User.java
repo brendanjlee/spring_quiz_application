@@ -1,5 +1,7 @@
 package org.example.spring_quiz_application.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,5 +42,7 @@ public class User {
     // relationship
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval =
             true)
+    @ToString.Exclude
+    @JsonManagedReference("user-quizResults")
     private List<QuizResult> quizResults;
 }

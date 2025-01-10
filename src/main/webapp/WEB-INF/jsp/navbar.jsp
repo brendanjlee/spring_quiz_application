@@ -8,7 +8,7 @@
 <body>
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/">Home</a>
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/">Quiz It!</a>
         <div class="d-flex ms-auto gap-5">
             <c:if test="${sessionScope.user.admin}">
                 <a class="nav-link" href="${pageContext.request.contextPath}/admin">Admin Page</a>

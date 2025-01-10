@@ -1,5 +1,7 @@
 package org.example.spring_quiz_application.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,6 +23,7 @@ public class Question {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonBackReference("category-question")
     private Category category;
 
     @Column(nullable = false)
@@ -29,11 +32,14 @@ public class Question {
     @Column(nullable = false, name = "is_active")
     private boolean isActive;
 
-
     // relationships
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonManagedReference("question-choice")
     private List<Choice> choices;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonManagedReference("question-quizQuestion")
     private List<QuizQuestion> quizQuestions;
 }

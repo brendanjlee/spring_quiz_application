@@ -1,5 +1,8 @@
 package org.example.spring_quiz_application.util;
 
+import org.example.spring_quiz_application.DTO.UserDTO;
+import org.example.spring_quiz_application.model.User;
+
 public class Utilities {
     public static void logApi(String baseurl, String path) {
         System.out.println(baseurl + "/" + path);
@@ -38,5 +41,14 @@ public class Utilities {
             sb.setLength(sb.length() - 2);
         }
         System.out.println(sb.toString());
+    }
+
+    public static UserDTO toUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        return userDTO;
     }
 }
