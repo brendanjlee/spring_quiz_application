@@ -17,7 +17,7 @@
         <p>Quiz End Time: ${quizResult.timeEnd}</p>
     </c:if>
     <c:choose>
-        <c:when test="${result >= 3}">
+        <c:when test="${quizResult.result >= 3}">
             <p class="text-success">Congratulations! You passed the quiz.</p>
         </c:when>
         <c:otherwise>
@@ -25,7 +25,8 @@
         </c:otherwise>
     </c:choose>
     <div class="list-group">
-        <c:forEach var="question" items="${questions}">
+        <%--     todo   questions should be quizResult.questions--%>
+        <c:forEach var="question" items="${quizResult.questions}">
             <div class="list-group-item">
                 <h5>${question.text}</h5>
                 <!-- Loop through each choice for the question -->
@@ -33,7 +34,7 @@
                     <div class="list-group-item">
                         <p>
                             <c:choose>
-                                <c:when test="${choic   e.answer}">
+                                <c:when test="${choice.answer}">
                                     <strong>${choice.text}</strong>
                                 </c:when>
                                 <c:otherwise>

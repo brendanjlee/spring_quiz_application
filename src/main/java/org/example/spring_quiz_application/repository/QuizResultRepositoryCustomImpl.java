@@ -1,9 +1,6 @@
 package org.example.spring_quiz_application.repository;
 
-import org.example.spring_quiz_application.model.Choice;
-import org.example.spring_quiz_application.model.Question;
-import org.example.spring_quiz_application.model.QuizResult;
-import org.example.spring_quiz_application.model.User;
+import org.example.spring_quiz_application.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -12,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class QuizResultRepositoryCustomImpl implements QuizResultRepositoryCustom {
     @PersistenceContext
@@ -45,7 +43,6 @@ public class QuizResultRepositoryCustomImpl implements QuizResultRepositoryCusto
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<QuizResult> cq = cb.createQuery(QuizResult.class);
         Root<QuizResult> root = cq.from(QuizResult.class);
-
         cq.select(root).where(cb.equal(root.get("id"), quizResultId));
         try {
             QuizResult quizResult =

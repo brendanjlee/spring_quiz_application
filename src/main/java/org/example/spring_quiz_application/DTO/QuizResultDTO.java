@@ -18,6 +18,8 @@ public class QuizResultDTO {
     private LocalDateTime timeStart;
     private LocalDateTime timeEnd;
 
+    // computed
+    private int result;
     private List<QuestionDTO> questions;
 
     public QuizResultDTO(int id, int userId, String categoryName,
@@ -35,9 +37,5 @@ public class QuizResultDTO {
         this.categoryName = quizResult.getCategory().getName();
         this.timeStart = quizResult.getTimeStart();
         this.timeEnd = quizResult.getTimeEnd();
-    }
-
-    public void setQuestionsWithDTO(List<QuestionDTO> questions) {
-        this.questions = questions;
     }
 }

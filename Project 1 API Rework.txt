@@ -35,10 +35,10 @@ Quiz Page (/quiz/{category_id})
 	[] countdown timer for quiz
 
 Quiz Result Page (/quiz/result/{quiz_result_id})
- [] fields: quiz name, user full name, quiz start time, quiz end time, quiz result
- [] result of each question
- [] show question content
- [] show choice content
+ [x] fields: quiz name, user full name, quiz start time, quiz end time, quiz result
+ [x] result of each question
+ [x] show question content
+ [x] show choice content
  
 Contact Us (/contactUs)
  [x] form for subject, email, and message

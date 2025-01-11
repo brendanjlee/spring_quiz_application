@@ -192,8 +192,8 @@ public class UiController {
         }
     }
 
-    @GetMapping("/quiz/result/{quizResultId}")
-    public String getQuizResult(@PathVariable("quizResultId") String quizResultId, Model model, HttpServletRequest request) {
+    @GetMapping("/quiz/result/{userId}/{quizResultId}")
+    public String getQuizResult(@PathVariable("userId") int userId, @PathVariable("quizResultId") String quizResultId, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         // redirect if not logged in
         if (session == null || session.getAttribute("user") == null) {
@@ -201,22 +201,15 @@ public class UiController {
             return "redirect:/login";
         }
 
-        User user = (User) session.getAttribute("user");
-
-        // fetch from backend /api/quiz/results/{quizResultId}
-        // attach to model
-        // [] quizResult -> categoryName
-        // [] questions & questions.choices
         try {
-            // session username
             ResponseEntity<QuizResultDTO> response = restTemplate.getForEntity(
-                    baseUrl + "api/quiz/results/" + user.getId() + "/" + quizResultId, QuizResultDTO.class
+                    baseUrl + "api/quiz/results/" + userId + "/" + quizResultId, QuizResultDTO.class
             );
 
             QuizResultDTO quizResultDTO = response.getBody();
             model.addAttribute("quizResult", quizResultDTO);
 
-            return "redirect:/quizResult";
+            return "quizResult";
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/";

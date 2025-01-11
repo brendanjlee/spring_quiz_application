@@ -370,7 +370,7 @@ VALUES (11, 2, 11, 41),
 insert into quiz_result (id, user_id, category_id, time_start, time_end)
 VALUES (3, 2, 3, '2024-12-31 19:48:55', '2024-12-31 19:55:55');
 insert into quiz_question (id, quiz_result_id, question_id, user_choice_id)
-VALUES (21, 3, 21, 81),
+VALUES (21, 3, 21, 82),
        (22, 3, 22, 85),
        (23, 3, 23, 89),
        (24, 3, 24, 93),

@@ -33,7 +33,7 @@
                                 <td>${quizResult.categoryName}</td>
                                 <td>${quizResult.timeStart}</td>
                                 <td>
-                                    <a href="${pageContext.request.contextPath}/quiz/result/user/${quizResult.id}"
+                                    <a href="${pageContext.request.contextPath}/quiz/result/${user.id}/${quizResult.id}"
                                        class="btn btn-primary btn-sm">View
                                         Result</a>
                                 </td>
