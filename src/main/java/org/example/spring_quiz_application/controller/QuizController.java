@@ -1,5 +1,6 @@
 package org.example.spring_quiz_application.controller;
 
+import org.example.spring_quiz_application.DTO.CategoryDTO;
 import org.example.spring_quiz_application.DTO.ChoiceDTO;
 import org.example.spring_quiz_application.DTO.QuestionDTO;
 import org.example.spring_quiz_application.DTO.QuizResultDTO;
@@ -28,22 +29,21 @@ public class QuizController {
     }
 
     @GetMapping("categories")
-    public ResponseEntity<List<Category>> getCategories() {
+    public ResponseEntity<List<CategoryDTO>> getCategoriesDTO() {
         Utilities.logApiWithMethod("GET", basePath, "categories");
-
-        // fetch list of category from service and return
-
         List<Category> categories = quizService.findAllCategories();
-        System.out.println("categories: " + categories);
+        List<CategoryDTO> categoryDTOS = categories.stream()
+                .map(CategoryDTO::new).collect(Collectors.toList());
+        System.out.println("categoryDTOS: " + categoryDTOS);
 
-        return ResponseEntity.ok(categories);
+        return ResponseEntity.ok(categoryDTOS);
     }
 
     @PostMapping("start/{userId}")
     public ResponseEntity<String> postStartQuiz(@PathVariable("userId") int userId) {
         Utilities.logApiWithMethod("POST", basePath, "start");
 
-        //
+        //todo also take in category id
 
         return ResponseEntity.ok("Quiz started");
     }

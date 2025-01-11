@@ -1,6 +1,7 @@
 package org.example.spring_quiz_application.controller;
 
 
+import org.example.spring_quiz_application.DTO.CategoryDTO;
 import org.example.spring_quiz_application.DTO.QuizResultDTO;
 import org.example.spring_quiz_application.model.Category;
 import org.example.spring_quiz_application.model.QuizResult;
@@ -38,17 +39,15 @@ public class UiController {
 
         try {
             // 1. fetch category names
-            ResponseEntity<List<Category>> categoryResponse =
-                    restTemplate.exchange(
-                            baseUrl + "api/quiz/categories",
-                            HttpMethod.GET,
-                            null,
-                            new ParameterizedTypeReference<List<Category>>() {
-                            }
-                    );
+            ResponseEntity<List<CategoryDTO>> categoryResponseDTO = restTemplate.exchange(
+                    baseUrl + "api/quiz/categories",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<CategoryDTO>>() {
+                    }
+            );
 
-            System.out.println(categoryResponse.getBody());
-            model.addAttribute("categories", categoryResponse.getBody());
+            model.addAttribute("categories", categoryResponseDTO.getBody());
 
             // 2. fetch quiz results
             User user = (User) session.getAttribute("user");
