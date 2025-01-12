@@ -11,6 +11,5 @@ public interface QuizResultRepositoryCustom {
 
     QuizResult findQuizResultById(int quizResultId);
 
-
     List<Choice> findChoicesByQuestionId(int questionId);
 }

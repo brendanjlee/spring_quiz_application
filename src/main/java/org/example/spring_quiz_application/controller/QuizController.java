@@ -1,9 +1,6 @@
 package org.example.spring_quiz_application.controller;
 
-import org.example.spring_quiz_application.DTO.CategoryDTO;
-import org.example.spring_quiz_application.DTO.ChoiceDTO;
-import org.example.spring_quiz_application.DTO.QuestionDTO;
-import org.example.spring_quiz_application.DTO.QuizResultDTO;
+import org.example.spring_quiz_application.DTO.*;
 import org.example.spring_quiz_application.model.*;
 import org.example.spring_quiz_application.service.QuizService;
 import org.example.spring_quiz_application.util.Utilities;
@@ -12,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,13 +39,20 @@ public class QuizController {
         return ResponseEntity.ok(categoryDTO);
     }
 
-    @PostMapping("start/{userId}")
-    public ResponseEntity<String> postStartQuiz(@PathVariable("userId") int userId) {
-        Utilities.logApiWithMethod("POST", basePath, "start");
+    @PostMapping("submit/{userId}")
+    public ResponseEntity<Integer> postStartQuiz(@PathVariable("userId") int userId,
+                                                 @RequestBody QuizResultSubmitDTO quizResultSubmitDTO) {
+        Utilities.logApiWithMethod("POST", basePath, "submit");
 
-        //todo also take in category id
 
-        return ResponseEntity.ok("Quiz started");
+        try {
+            int quizResultId = quizService.submitQuizResult(userId, quizResultSubmitDTO);
+
+            return ResponseEntity.ok(quizResultId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
     }
 
     @GetMapping("categories/{categoryId}/questions")
@@ -78,7 +80,8 @@ public class QuizController {
             List<QuizResult> quizResults =
                     quizService.findQuizResultsByUserId(userId);
             List<QuizResultDTO> response = quizResults.stream()
-                    .map(QuizResultDTO::new).collect(Collectors.toList());
+                    .map(QuizResultDTO::new)
+                    .sorted(Comparator.comparing(QuizResultDTO::getTimeStart).reversed()).collect(Collectors.toList());
 
             System.out.println("response: " + response);
 
@@ -89,7 +92,8 @@ public class QuizController {
     }
 
     @GetMapping("results/{userId}/{quizResultId}")
-    public ResponseEntity<QuizResultDTO> getResult(@PathVariable("userId") int userId, @PathVariable("quizResultId") int quizResultId) {
+    public ResponseEntity<QuizResultDTO> getResult(@PathVariable("userId") int userId,
+                                                   @PathVariable("quizResultId") int quizResultId) {
         Utilities.logApiWithMethod("GET", basePath, "results",
                 String.valueOf(userId),
                 String.valueOf(quizResultId));

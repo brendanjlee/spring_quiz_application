@@ -1,18 +1,16 @@
 package org.example.spring_quiz_application.service;
 
-import org.example.spring_quiz_application.DTO.CategoryDTO;
-import org.example.spring_quiz_application.DTO.ChoiceDTO;
-import org.example.spring_quiz_application.DTO.QuestionDTO;
-import org.example.spring_quiz_application.DTO.QuizResultDTO;
+import org.example.spring_quiz_application.DTO.*;
 import org.example.spring_quiz_application.model.*;
-import org.example.spring_quiz_application.repository.CategoryRepository;
-import org.example.spring_quiz_application.repository.QuestionRepository;
-import org.example.spring_quiz_application.repository.QuizQuestionRepository;
-import org.example.spring_quiz_application.repository.QuizResultRepository;
+import org.example.spring_quiz_application.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,17 +19,24 @@ public class QuizService {
     private final QuizResultRepository quizResultRepository;
     private final QuestionRepository questionRepository;
     private final QuizQuestionRepository quizQuestionRepository;
+    private final UserRepository userRepository;
+    private final ChoiceRepository choiceRepository;
 
     @Autowired
     public QuizService(CategoryRepository categoryRepository,
                        QuizResultRepository quizResultRepository,
                        QuestionRepository questionRepository,
-                       QuizQuestionRepository quizQuestionRepository) {
+                       QuizQuestionRepository quizQuestionRepository,
+                       UserRepository userRepository,
+                       ChoiceRepository choiceRepository) {
 
         this.categoryRepository = categoryRepository;
         this.quizResultRepository = quizResultRepository;
         this.questionRepository = questionRepository;
         this.quizQuestionRepository = quizQuestionRepository;
+        this.userRepository = userRepository;
+        this.choiceRepository = choiceRepository;
+
     }
 
     public List<Category> findAllCategories() {
@@ -119,6 +124,51 @@ public class QuizService {
         return quizQuestions.stream()
                 .filter(quizQuestion -> quizQuestion.getQuizResult().getId() == quizResultId)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public int submitQuizResult(int userId, QuizResultSubmitDTO quizResultSubmitDTO) {
+        LocalDateTime endTime = LocalDateTime.now();
+
+        System.out.println(quizResultSubmitDTO);
+
+        // 1. create new quiz result
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new EntityNotFoundException("User not found with ID: " + userId));
+        Category category = categoryRepository.findById(quizResultSubmitDTO.getCategoryId()).orElseThrow(() ->
+                new EntityNotFoundException("Category not found with ID: " + quizResultSubmitDTO.getCategoryId()));
+
+        QuizResult quizResult = QuizResult.builder()
+                .user(user)
+                .category(category)
+                .timeStart(quizResultSubmitDTO.getStartTime())
+                .timeEnd(endTime)
+                .build();
+
+        quizResultRepository.save(quizResult); // todo extract Id
+
+        // 2. create new quiz questions
+        saveQuizQuestions(quizResult, quizResultSubmitDTO.getQuestionToChoiceMap());
+
+        return quizResult.getId();
+    }
+
+    @Transactional
+    public void saveQuizQuestions(QuizResult quizResult, Map<Integer, Integer> quizAnswers) {
+        for (Map.Entry<Integer, Integer> entry : quizAnswers.entrySet()) {
+            int questionId = entry.getKey();
+            int choiceId = entry.getValue();
+
+            Question question = questionRepository.findById(questionId).orElseThrow(() -> new EntityNotFoundException("Question not found with ID: " + questionId));
+            Choice choice = choiceRepository.findById(choiceId).orElseThrow(() -> new EntityNotFoundException("Choice not found with ID: " + choiceId));
+
+            QuizQuestion quizQuestion = QuizQuestion.builder()
+                    .quizResult(quizResult)
+                    .question(question)
+                    .userChoice(choice)
+                    .build();
+            quizQuestionRepository.save(quizQuestion);
+        }
     }
 }
 

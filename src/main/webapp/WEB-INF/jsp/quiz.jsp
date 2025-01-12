@@ -16,7 +16,7 @@
 </div>
 
 <!-- Quiz Form -->
-<form method="post" action="${pageContext.request.contextPath}/api/quiz/submitQuiz" id="quizForm">
+<form method="post" action="${pageContext.request.contextPath}/quiz/submit/${category.id}" id="quizForm">
     <div class="container mt-4">
 
         <!-- Loop through each quiz question -->

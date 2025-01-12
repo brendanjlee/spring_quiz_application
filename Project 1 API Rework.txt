@@ -26,13 +26,9 @@ Home Page (/)
 	post mappings from UI for something like /quizResult/{id} 
 
 Quiz Page (/quiz/{category_id})
- [] display 5 multiple choice questions
- [] randomly select 5 questions
- [] submit quiz
- Bonus:
-	[] different styles for answered and unanswered
-	[] short answer questions
-	[] countdown timer for quiz
+ [x] display 5 multiple choice questions
+ [x] randomly select 5 questions
+ [x] submit quiz
 
 Quiz Result Page (/quiz/result/{quiz_result_id})
  [x] fields: quiz name, user full name, quiz start time, quiz end time, quiz result
@@ -106,23 +102,9 @@ AuthenticationController
 QuizController
 ------------------------
  - GET  /api/quiz/categories (get all quiz category names)
-	- http://localhost:8081/api/quiz/categories
- - POST /api/quiz/start/{userId} (start a new quiz, be aware of user id)
-	- http://localhost:8081/api/quiz/start/1
+ - POST /api/quiz/submit/{userId}
  - GET	/api/quiz/categories/{categoryId}/questions (get random questions, its choices for a quiz)
-	- http://localhost:8081/api/quiz/categories/1/questions
- - POST /api/quiz/results (submit quiz result... user id?)
- - GET  /api/quiz/results/{userId} (get a list of quiz results for user)
-	- return:
-		quizResults [
-			quizResult
-				id
-				user_id
-				category
-					name()
-		]
-			
-				
+ - GET  /api/quiz/results/{userId} (get a list of quiz results for user)				
  - GET  /api/quiz/results/{userId}/{quizResultId} (get a result of a specific quiz)
 
 UserController

@@ -4,13 +4,13 @@ package org.example.spring_quiz_application.controller;
 import org.example.spring_quiz_application.DTO.CategoryDTO;
 import org.example.spring_quiz_application.DTO.QuestionDTO;
 import org.example.spring_quiz_application.DTO.QuizResultDTO;
+import org.example.spring_quiz_application.DTO.QuizResultSubmitDTO;
 import org.example.spring_quiz_application.model.Category;
 import org.example.spring_quiz_application.model.QuizResult;
 import org.example.spring_quiz_application.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.Response;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 
 @Controller
@@ -260,11 +258,11 @@ public class UiController {
     }
 
     @GetMapping("/quiz/{categoryId}")
-    public String getQuiz(@PathVariable("categoryId") int categoryId,
-                          @ModelAttribute("category") CategoryDTO category,
-                          @ModelAttribute("questions") List<QuestionDTO> questions,
-                          Model model,
-                          HttpServletRequest request) {
+    public String getQuizPage(@PathVariable("categoryId") int categoryId,
+                              @ModelAttribute("category") CategoryDTO category,
+                              @ModelAttribute("questions") List<QuestionDTO> questions,
+                              Model model,
+                              HttpServletRequest request) {
         // check for user
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
@@ -276,6 +274,70 @@ public class UiController {
         model.addAttribute("category", category);
         model.addAttribute("questions", questions);
 
+        // create start time for session
+        session.setAttribute("startTime", LocalDateTime.now());
+
         return "quiz";
     }
+
+    @PostMapping("/quiz/submit/{categoryId}")
+    public String postSubmitQuiz(@PathVariable("categoryId") int categoryId,
+                                 HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            System.out.println("session or user is null");
+            return "redirect:/";
+        }
+
+        // 1. get user
+        User user = (User) session.getAttribute("user");
+
+        // 2. get start time
+        if (session.getAttribute("startTime") == null) {
+            System.out.println("session start time is null");
+            return "redirect:/";
+        }
+        LocalDateTime startTime = (LocalDateTime) session.getAttribute("startTime");
+
+        // 3. Filter form results {question_id:choice_id} pairing
+        Enumeration<String> parameterNames = request.getParameterNames();
+        Map<Integer, Integer> quizAnswers = new HashMap<>();
+        while (parameterNames.hasMoreElements()) {
+            String parameterName = parameterNames.nextElement();
+            if (parameterName.startsWith("question_")) {
+                int questionId = Integer.parseInt(parameterName.substring(9));
+                int choiceId =
+                        Integer.parseInt(request.getParameter(parameterName));
+                quizAnswers.put(questionId, choiceId);
+            }
+        }
+
+        // 4. craft DTO
+        QuizResultSubmitDTO quizResultSubmitDTO = new QuizResultSubmitDTO(startTime, categoryId, quizAnswers);
+
+        try {
+            // craft request
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<QuizResultSubmitDTO> requestEntity = new HttpEntity<>(quizResultSubmitDTO, headers);
+            String url = baseUrl + "/api/quiz/submit/" + user.getId();
+
+            // send request
+            ResponseEntity<Integer> response = restTemplate.postForEntity(url,
+                    requestEntity, Integer.class);
+
+            if (response.getStatusCode().is2xxSuccessful() || response.getBody() != null) {
+                int quizResultId = response.getBody();
+                System.out.println("Quiz Result Id: " + quizResultId);
+
+                return "redirect:/quiz/result/" + user.getId() + "/" + quizResultId;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return "redirect:/";
+        }
+        return "redirect:/";
+    }
+
 }
