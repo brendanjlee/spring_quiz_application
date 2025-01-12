@@ -4,6 +4,7 @@ import org.example.spring_quiz_application.DTO.CategoryDTO;
 import org.example.spring_quiz_application.DTO.QuestionDTO;
 import org.example.spring_quiz_application.DTO.QuizResultDTO;
 import org.example.spring_quiz_application.DTO.UserDTO;
+import org.example.spring_quiz_application.model.Contact;
 import org.example.spring_quiz_application.model.User;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -211,7 +212,22 @@ public class AdminUiController {
     }
 
     @GetMapping("contactUsManagement")
-    public String getContactUsManagement() {
-        return "contactUsManagement";
+    public String getContactUsManagement(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (!validUser(session)) {
+            return "redirect:/";
+        }
+
+        ResponseEntity<List<Contact>> contactResponse = restTemplate.exchange(
+                baseUrl + "api/admin/contacts",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Contact>>() {
+                }
+        );
+
+        model.addAttribute("contacts", contactResponse.getBody());
+
+        return "adminContact";
     }
 }

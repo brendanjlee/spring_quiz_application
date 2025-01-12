@@ -56,15 +56,15 @@ User Management (/admin/users)
  [x] Present full name, email, status, admin status
 
 Quiz Result Management (/admin/quizes)
- [] Quiz Table
-	[] fields: start time, category, full name, number of questions, score
-	[] order by time
-	[] link to quiz result (/quiz/result/{quiz_result_id})
-	[] filters
-		[] filter by name
-		[] filter by email
-		[] filter by both
- [] admin session only
+ [x] Quiz Table
+	[x] fields: start time, category, full name, number of questions, score
+	[x] order by time
+	[x] link to quiz result (/quiz/result/{quiz_result_id})
+	[x] filters
+		[x] filter by name
+		[x] filter by email
+		[x] filter by both
+ [x] admin session only
 
 
 Question Management (/admin/questions)
@@ -80,9 +80,9 @@ Question Management (/admin/questions)
  [] admin session only
 	
 Contact Us (/admin/contactUs)
- [] Table
-	[] link to each contact message (/admin/contactUs/{contact_id})
-	[] truncate text
+ [x] Table
+	[] link to each contact message (/admin/contactUs/{contact_id}) ... later
+	[] truncate text ... later
 
 
 

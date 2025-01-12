@@ -136,9 +136,14 @@ public class AdminController {
 
     /* Contact Management */
     @GetMapping("/contacts")
-    public ResponseEntity<String> getContacts() {
+    public ResponseEntity<List<Contact>> getAllContacts() {
         Utilities.logApiWithMethod("GET", basePath, "contacts");
-        return ResponseEntity.ok().body(null);
+        try {
+            List<Contact> contacts = contactService.findAllContacts();
+            return ResponseEntity.ok().body(contacts);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(null);
+        }
     }
 
     @PostMapping("/contacts")

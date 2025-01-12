@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ContactService {
@@ -15,6 +16,10 @@ public class ContactService {
     @Autowired
     public ContactService(ContactRepository contactRepository) {
         this.contactRepository = contactRepository;
+    }
+
+    public List<Contact> findAllContacts() {
+        return contactRepository.findAll();
     }
 
     @Transactional
