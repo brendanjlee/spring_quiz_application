@@ -18,9 +18,12 @@ public class QuizResultDTO {
     private LocalDateTime timeStart;
     private LocalDateTime timeEnd;
 
+
     // computed
     private int result;
     private List<QuestionDTO> questions;
+    private int numQuestions;
+    private String userFullName;
 
     public QuizResultDTO(int id, int userId, String categoryName,
                          LocalDateTime timeStart, LocalDateTime timeEnd) {

@@ -56,6 +56,16 @@ public class QuizService {
         return new CategoryDTO(categoryRepository.findCategoryById(categoryId));
     }
 
+    public List<QuizResultDTO> findAllQuizResultDTO() {
+        // 1. get all quiz results
+        List<QuizResult> quizResults = quizResultRepository.findAll();
+
+        return quizResults.stream()
+                .sorted((qr1, qr2) -> qr2.getTimeStart().compareTo(qr1.getTimeStart()))
+                .map(this::mapToQuizResultDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<QuizResult> findQuizResultsByUserId(int userId) {
         return quizResultRepository.findQuizResultsByUserId(userId);
     }
@@ -66,43 +76,8 @@ public class QuizService {
     }
 
     public QuizResultDTO findQuizResultDtoById(int quizResultId) {
-        // 1. pull quiz results
         QuizResult quizResult = quizResultRepository.findQuizResultById(quizResultId);
-
-        // 2. pull joined results
-        List<QuizQuestion> quizQuestionList = quizResult.getQuizQuestions();
-        List<Question> questionList = quizQuestionList.stream()
-                .map(QuizQuestion::getQuestion).collect(Collectors.toList());
-        List<Choice> userChoiceList = quizQuestionList.stream()
-                .map(QuizQuestion::getUserChoice).collect(Collectors.toList());
-
-        // 3. create DTO out of the joined tables
-        List<ChoiceDTO> userChoiceDTOs = userChoiceList.stream()
-                .map(ChoiceDTO::new).collect(Collectors.toList());
-        List<QuestionDTO> questionDTOs = questionList.stream()
-                .map(QuestionDTO::new).collect(Collectors.toList());
-        questionDTOs.forEach(questionDTO -> {
-            questionDTO.getChoices().forEach(choice -> {
-                int choiceId = choice.getId();
-                choice.setUserAnswer(userChoiceDTOs.stream().map(ChoiceDTO::getId).collect(Collectors.toList()).contains(choiceId));
-            });
-        });
-
-        // 4. attach questions to DTO
-        QuizResultDTO quizResultDTO = new QuizResultDTO(quizResult);
-        quizResultDTO.setQuestions(questionDTOs);
-
-        // 5. calculate result
-        int result = 0;
-        for (QuestionDTO questionDTO : quizResultDTO.getQuestions()) {
-            for (ChoiceDTO choiceDTO : questionDTO.getChoices()) {
-                if (choiceDTO.isAnswer() && choiceDTO.isUserAnswer()) {
-                    result++;
-                }
-            }
-        }
-        quizResultDTO.setResult(result);
-
+        QuizResultDTO quizResultDTO = mapToQuizResultDTO(quizResult);
         return quizResultDTO;
     }
 
@@ -169,6 +144,45 @@ public class QuizService {
                     .build();
             quizQuestionRepository.save(quizQuestion);
         }
+    }
+
+    /* Mapper */
+    private QuizResultDTO mapToQuizResultDTO(QuizResult quizResult) {
+        // 1. pull joined results
+        List<QuizQuestion> quizQuestionList = quizResult.getQuizQuestions();
+        List<Question> questionList = quizQuestionList.stream()
+                .map(QuizQuestion::getQuestion).collect(Collectors.toList());
+        List<Choice> userChoiceList = quizQuestionList.stream()
+                .map(QuizQuestion::getUserChoice).collect(Collectors.toList());
+
+        // 2. create DTO
+        List<ChoiceDTO> userChoiceDTOs = userChoiceList.stream()
+                .map(ChoiceDTO::new).collect(Collectors.toList());
+        List<QuestionDTO> questionDTOs = questionList.stream()
+                .map(QuestionDTO::new).collect(Collectors.toList());
+        questionDTOs.forEach(questionDTO -> {
+            questionDTO.getChoices().forEach(choice -> {
+                int choiceId = choice.getId();
+                choice.setUserAnswer(userChoiceDTOs.stream().map(ChoiceDTO::getId).collect(Collectors.toList()).contains(choiceId));
+            });
+        });
+
+        // 3. attach to DTO
+        QuizResultDTO quizResultDTO = new QuizResultDTO(quizResult);
+        quizResultDTO.setQuestions(questionDTOs);
+
+        // 4. calculate result
+        int result = 0;
+        for (QuestionDTO questionDTO : quizResultDTO.getQuestions()) {
+            for (ChoiceDTO choiceDTO : questionDTO.getChoices()) {
+                if (choiceDTO.isAnswer() && choiceDTO.isUserAnswer()) {
+                    result++;
+                }
+            }
+        }
+        quizResultDTO.setResult(result);
+
+        return quizResultDTO;
     }
 }
 

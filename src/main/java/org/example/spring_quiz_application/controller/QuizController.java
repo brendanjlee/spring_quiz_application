@@ -70,6 +70,20 @@ public class QuizController {
         return ResponseEntity.ok("Quiz finished");
     }
 
+    @GetMapping("results")
+    public ResponseEntity<List<QuizResultDTO>> getAllResults() {
+        Utilities.logApiWithMethod("GET", basePath, "results");
+        try {
+            List<QuizResultDTO> quizResultDTOS = quizService.findAllQuizResultDTO();
+
+            // map questions
+
+            return ResponseEntity.ok(quizResultDTOS);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     // get results by user id
     @GetMapping("results/user/{userId}")
     public ResponseEntity<List<QuizResultDTO>> getAllResults(@PathVariable(

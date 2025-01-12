@@ -15,7 +15,7 @@
 
     <!-- Filter Section -->
     <div class="d-flex justify-content-between mb-4">
-        <form action="${pageContext.request.contextPath}/quizResultManagement" method="GET" class="form-inline">
+        <form action="${pageContext.request.contextPath}/admin/quizResultManagement" method="GET" class="form-inline">
             <!-- Filter by Category -->
             <div class="form-group mr-3">
                 <label for="category" class="mr-2">Filter by Category:</label>
@@ -55,15 +55,15 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach var="result" items="${results}">
+        <c:forEach var="result" items="${quizResults}">
             <tr>
-                <td>${result.startTime}</td>
+                <td>${result.timeStart}</td>
                 <td>${result.categoryName}</td>
                 <td>${result.userFullName}</td>
                 <td>${result.numQuestions}</td>
-                <td>${result.score}</td>
+                <td>${result.result}</td>
                 <td>
-                    <a href="/quiz/result/${result.quizResultId}" class="btn btn-primary">View</a>
+                    <a href="/quiz/result/${result.userId}/${result.id}" class="btn btn-primary">View</a>
                 </td>
             </tr>
         </c:forEach>

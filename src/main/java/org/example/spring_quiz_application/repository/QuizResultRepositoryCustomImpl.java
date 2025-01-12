@@ -21,6 +21,19 @@ public class QuizResultRepositoryCustomImpl implements QuizResultRepositoryCusto
     }
 
     @Override
+    public List<QuizResult> findAllQuizResults() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<QuizResult> cq = cb.createQuery(QuizResult.class);
+        Root<QuizResult> root = cq.from(QuizResult.class);
+
+        root.fetch("category", JoinType.LEFT);
+        root.fetch("user", JoinType.LEFT);
+
+        cq.select(root);
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    @Override
     public List<QuizResult> findQuizResultsByUserId(int userId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<QuizResult> cq = cb.createQuery(QuizResult.class);
