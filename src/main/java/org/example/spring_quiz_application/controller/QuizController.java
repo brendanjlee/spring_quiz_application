@@ -77,6 +77,7 @@ public class QuizController {
         Utilities.logApiWithMethod("GET", basePath, "results",
                 String.valueOf(userId));
         try {
+            // todo move mapping to service
             List<QuizResult> quizResults =
                     quizService.findQuizResultsByUserId(userId);
             List<QuizResultDTO> response = quizResults.stream()

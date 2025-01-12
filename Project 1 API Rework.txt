@@ -45,15 +45,15 @@ Contact Us (/contactUs)
 Admin
 -----
 Admin Home (/admin)
- [] Links
-	[] user management
-	[] quiz management
-	[] question management
-	[] contact us management
- [] admin session only
+ [x] Links
+	[x] user management
+	[x] quiz management
+	[x] question management
+	[x] contact us management
+ [x] admin session only
 
 User Management (/admin/users)
- [] Present full name, email, status, admin status
+ [x] Present full name, email, status, admin status
 
 Quiz Result Management (/admin/quizes)
  [] Quiz Table

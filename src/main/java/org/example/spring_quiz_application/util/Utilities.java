@@ -42,13 +42,4 @@ public class Utilities {
         }
         System.out.println(sb.toString());
     }
-
-    public static UserDTO toUserDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setLastName(user.getLastName());
-        return userDTO;
-    }
 }

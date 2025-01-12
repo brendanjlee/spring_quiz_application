@@ -18,6 +18,7 @@
             <th>Last Name</th>
             <th>Email</th>
             <th>Active Status</th>
+            <th>Admin Status</th>
         </tr>
         </thead>
         <tbody>
@@ -27,11 +28,21 @@
                 <td>${user.lastName}</td>
                 <td>${user.email}</td>
                 <td>
-                    <form action="${pageContext.request.contextPath}/api/admin/toggleActiveStatus" method="post"
+                    <form action="${pageContext.request.contextPath}/admin/toggleActive/${user.id}"
+                          method="post"
                           style="display: inline;">
                         <input type="hidden" name="userId" value="${user.id}">
                         <button type="submit" class="btn ${user.active ? 'btn-success' : 'btn-danger'}">
                                 ${user.active? 'True' : 'False'}
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <form action="${pageContext.request.contextPath}/admin/toggleAdmin/${user.id}" method="post"
+                          style="display: inline;">
+                        <input type="hidden" name="userId" value="${user.id}">
+                        <button type="submit" class="btn ${user.admin ? 'btn-success' : 'btn-danger'}">
+                                ${user.admin? 'True' : 'False'}
                         </button>
                     </form>
                 </td>

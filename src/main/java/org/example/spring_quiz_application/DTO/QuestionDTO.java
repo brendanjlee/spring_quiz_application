@@ -19,25 +19,7 @@ public class QuestionDTO {
     private boolean isActive;
 
     private List<ChoiceDTO> choices;
-
-//    public QuestionDTO(int id, int categoryId, String text, boolean
-//    isAnswer) {
-//        this.id = id;
-//        this.categoryId = categoryId;
-//        this.text = text;
-//        this.isActive = isAnswer;
-//    }
-
-    //    public QuestionDTO(int id, int categoryId, String text, boolean
-    //    isAnswer, List<Choice> choices) {
-//        this.id = id;
-//        this.categoryId = categoryId;
-//        this.text = text;
-//        this.isActive = isAnswer;
-//        this.choices = choices.stream().map(ChoiceDTO::new).collect
-//        (Collectors.toList());
-//    }
-//
+    
     public QuestionDTO(Question question) {
         this.id = question.getId();
         this.categoryId = question.getCategory().getId();

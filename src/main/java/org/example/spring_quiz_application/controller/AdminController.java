@@ -5,6 +5,7 @@ import org.example.spring_quiz_application.model.Contact;
 import org.example.spring_quiz_application.model.Question;
 import org.example.spring_quiz_application.model.User;
 import org.example.spring_quiz_application.service.ContactService;
+import org.example.spring_quiz_application.service.UserService;
 import org.example.spring_quiz_application.util.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,12 @@ import java.util.Map;
 public class AdminController {
     private final ContactService contactService;
     private final String basePath = "/api/admin";
+    private final UserService userService;
 
-    // autowrire
     @Autowired
-    public AdminController(ContactService contactService) {
+    public AdminController(ContactService contactService, UserService userService) {
         this.contactService = contactService;
+        this.userService = userService;
     }
 
     /* USER Management */
@@ -35,24 +37,26 @@ public class AdminController {
         return ResponseEntity.ok().body(null);
     }
 
-    @PatchMapping("/users/{userId}/status")
-    public ResponseEntity<User> updateUser(@PathVariable("userId") String userId) {
-        Utilities.logApiWithMethod("PATCH", basePath, "users/{}/status",
+    @PutMapping("/users/{userId}/toggleActive")
+    public ResponseEntity<User> toggleUserActiveStatus(@PathVariable("userId") int userId) {
+        Utilities.logApiWithMethod("PATCH", basePath, "users/{}/status" +
                 userId);
+        try {
+            userService.toggleUserStatus(userId);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(null);
+        }
         return ResponseEntity.ok().body(null);
     }
 
-    @PatchMapping("/users/{userId}/promote")
-    public ResponseEntity<User> promoteUser(@PathVariable("userId") String userId) {
-        Utilities.logApiWithMethod("PATCH", basePath, "users/{}/promote",
-                userId);
-        return ResponseEntity.ok().body(null);
-    }
-
-    @PatchMapping("/users/{userId}/demote")
-    public ResponseEntity<User> demoteUser(@PathVariable("userId") String userId) {
-        Utilities.logApiWithMethod("PATCH", basePath, "users/{}/demote",
-                userId);
+    @PutMapping("/users/{userId}/toggleAdmin")
+    public ResponseEntity<User> toggleUserAdminStatus(@PathVariable("userId") int userId) {
+        Utilities.logApiWithMethod("PATCH", basePath, "users/{}/promote" + userId);
+        try {
+            userService.toggleAdminStatus(userId);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(null);
+        }
         return ResponseEntity.ok().body(null);
     }
 

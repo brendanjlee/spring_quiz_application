@@ -1,5 +1,6 @@
 package org.example.spring_quiz_application.controller;
 
+import org.example.spring_quiz_application.DTO.UserDTO;
 import org.example.spring_quiz_application.model.User;
 import org.example.spring_quiz_application.service.UserService;
 import org.example.spring_quiz_application.util.Utilities;
@@ -24,11 +25,13 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         Utilities.logApi(basePath, "");
-        List<User> users = userService.findAllUsers();
-        return users == null ? ResponseEntity.noContent().build() :
-                ResponseEntity.ok(users);
+
+        List<UserDTO> usersDTO = userService.findAllUsersDTO();
+        
+        return usersDTO == null ? ResponseEntity.noContent().build() :
+                ResponseEntity.ok(usersDTO);
     }
 
     @GetMapping("/{userId}")
