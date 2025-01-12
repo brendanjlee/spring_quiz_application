@@ -105,6 +105,7 @@ public class QuizService {
         for (QuestionDTO questionDTO : questionDTOS) {
             questionDTO.setCategoryName(categoryIdToNameMap.get(questionDTO.getCategoryId()));
         }
+        questionDTOS.sort((q1, q2) -> q1.getCategoryName().compareTo(q2.getCategoryName()));
 
         return questionDTOS;
     }
