@@ -10,15 +10,16 @@
 <%@include file="navbar.jsp" %>
 <div class="container mt-5">
     <h3>Edit Question</h3>
-    <form method="post" action="${pageContext.request.contextPath}/admin/saveQuestion">
+    <form method="post" action="${pageContext.request.contextPath}/admin/editQuestion/${question.id}">
         <input type="hidden" name="questionId" value="${question.id}"/>
+        <input type="hidden" name="categoryId" value="${question.categoryId}"/>
         <div class="mb-3">
             <label for="text" class="form-label">Question Text</label>
             <input type="text" class="form-control" id="text" name="text" value="${question.text}" required/>
         </div>
 
         <h5>Choices</h5>
-        <c:forEach var="choice" items="${choices}">
+        <c:forEach var="choice" items="${question.choices}">
             <div class="mb-3">
                 <label for="choice_${choice.id}" class="form-label">Choice: ${choice.id}</label>
                 <input type="text" class="form-control" id="choice_${choice.id}" name="choices[${choice.id}].text"
@@ -32,7 +33,7 @@
         </c:forEach>
 
         <div class="d-flex justify-content-between">
-            <a href="${pageContext.request.contextPath}/questionManagement" class="btn btn-danger">Cancel</a>
+            <a href="${pageContext.request.contextPath}/admin/questionManagement" class="btn btn-danger">Cancel</a>
             <button type="submit" class="btn btn-success">Save</button>
         </div>
     </form>

@@ -87,6 +87,12 @@ public class QuizService {
         return questionRepository.findQuestionsByCategoryId(categoryId);
     }
 
+    public QuestionDTO findQuestionDtoById(int questionId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(() ->
+                new EntityNotFoundException("Question not found with ID: " + questionId));
+        return new QuestionDTO(question);
+    }
+
     public List<QuestionDTO> findQuestionDTOsByCategoryId(int categoryId) {
         return questionRepository.findQuestionsByCategoryId(categoryId).stream()
                 .map(QuestionDTO::new).collect(Collectors.toList());
@@ -174,7 +180,35 @@ public class QuizService {
     }
 
     @Transactional
-    public void saveQuestion(QuestionSubmitDTO questionSubmitDTO) {
+    public void updateQuestion(QuestionSubmitDTO questionSubmitDTO) {
+        // 1. query question
+        Question question = questionRepository.findById(
+                questionSubmitDTO.getQuestionId()).orElseThrow(() -> new IllegalArgumentException("Invalid question ID")
+        );
+
+        // 2. update question text
+        question.setText(questionSubmitDTO.getText());
+
+        // 3. update choices
+        List<ChoiceDTO> choiceDTOs = questionSubmitDTO.extractChoices();
+        List<Choice> existingChoices = question.getChoices();
+
+        for (int i = 0; i < choiceDTOs.size(); i++) {
+            ChoiceDTO choiceDTO = choiceDTOs.get(i);
+            Choice existingChoice = existingChoices.get(i);
+
+            // Update existing choice
+            existingChoice.setText(choiceDTO.getText());
+            existingChoice.setAnswer(choiceDTO.isAnswer());
+        }
+
+        // Save the updated question (choices will be saved as well due to cascade)
+        questionRepository.save(question);
+        
+    }
+
+    @Transactional
+    public void saveNewQuestion(QuestionSubmitDTO questionSubmitDTO) {
         // 1. get category name
         Category category = categoryRepository.findById(questionSubmitDTO.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));

@@ -33,7 +33,7 @@ public class Question {
     private boolean isActive;
 
     // relationships
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @JsonManagedReference("question-choice")
     private List<Choice> choices;

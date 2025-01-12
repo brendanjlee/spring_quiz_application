@@ -75,9 +75,9 @@ Question Management (/admin/questions)
 		[] Fields: category name, question desc, ...
 		[] Edit
 		[] Toggle
- [] Add question (/admin/questions/new)
-	[] form for new question
- [] admin session only
+ [x] Add question (/admin/questions/new)
+	[x] form for new question
+ [x] admin session only
 	
 Contact Us (/admin/contactUs)
  [x] Table

@@ -12,7 +12,7 @@ public class ChoiceDTO {
     private int id;
     private int questionId;
     private String text;
-    private boolean isAnswer;
+    private boolean isAnswer = false;
     private boolean isUserAnswer = false;
 
     public ChoiceDTO(Choice choice) {

@@ -59,7 +59,7 @@
         </div>
 
         <div class="d-flex justify-content-between">
-            <a href="${pageContext.request.contextPath}/questionManagement" class="btn btn-danger">Cancel</a>
+            <a href="${pageContext.request.contextPath}/admin/questionManagement" class="btn btn-danger">Cancel</a>
             <button type="submit" class="btn btn-success">Save</button>
         </div>
     </form>

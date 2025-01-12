@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -105,6 +103,20 @@ public class AdminController {
     }
 
     /* Question Management */
+
+    @GetMapping("questions/{questionId}")
+    public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable("questionId") int questionId) {
+        Utilities.logApiWithMethod("GET", basePath, "questions/{}",
+                String.valueOf(questionId));
+        try {
+            QuestionDTO questionDTO = quizService.findQuestionDtoById(questionId);
+            return ResponseEntity.ok().body(questionDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.ok().body(null);
+        }
+    }
+
     @GetMapping("questions")
     public ResponseEntity<List<QuestionDTO>> getQuestions() {
         Utilities.logApiWithMethod("GET", basePath, "questions");
@@ -117,30 +129,30 @@ public class AdminController {
         }
     }
 
-    @GetMapping("questions/{questionId}")
-    public ResponseEntity<Question> getQuestion(@PathVariable("questionId") int questionId) {
-        Utilities.logApiWithMethod("GET", basePath, "questions/{}",
-                String.valueOf(questionId));
-        return ResponseEntity.ok().body(null);
-    }
 
     @PostMapping("questions")
     public ResponseEntity<Integer> addQuestion(@RequestBody QuestionSubmitDTO questionSubmitDTO) {
         Utilities.logApiWithMethod("POST", basePath, "questions");
-        
+
         try {
-            quizService.saveQuestion(questionSubmitDTO);
+            quizService.saveNewQuestion(questionSubmitDTO);
             return ResponseEntity.ok().body(null);
         } catch (Exception e) {
             return ResponseEntity.status(400).body(null);
         }
     }
 
-    @PutMapping("questions/{questionId}")
-    public ResponseEntity<Question> updateQuestion(@PathVariable("questionId") int questionId,
-                                                   @RequestBody Question question) {
-        Utilities.logApiWithMethod("PUT", basePath, "questions/{}",
-                String.valueOf(questionId));
+    @PutMapping("questions")
+    public ResponseEntity<Question> updateQuestion(@RequestBody QuestionSubmitDTO questionSubmitDTO) {
+        Utilities.logApiWithMethod("PUT", basePath, "questions/{}");
+        System.out.println(questionSubmitDTO.toString());
+
+        try {
+            quizService.updateQuestion(questionSubmitDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(null);
+        }
+
         return ResponseEntity.ok().body(null);
     }
 

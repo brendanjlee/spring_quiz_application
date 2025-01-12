@@ -340,4 +340,60 @@ public class AdminUiController {
 
         return "redirect:/admin/questionManagement";
     }
+
+    @GetMapping("editQuestion/{questionId}")
+    public String getEditQuestion(@PathVariable("questionId") int questionId,
+                                  HttpServletRequest request,
+                                  Model model) {
+        HttpSession session = request.getSession(false);
+        if (!validUser(session)) {
+            return "redirect:/";
+        }
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+            // Make the PATCH request
+            ResponseEntity<QuestionDTO> res = restTemplate.exchange(
+                    baseUrl + "/api/admin/questions/" + questionId,
+                    HttpMethod.GET,
+                    null,
+                    QuestionDTO.class
+            );
+
+            model.addAttribute("question", res.getBody());
+
+            return "editQuestion";
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return "redirect:/admin/questionManagement";
+        }
+    }
+
+    @PostMapping("editQuestion/{questionId}")
+    public String postEditQuestion(@PathVariable("questionId") int questionId,
+                                   @RequestParam Map<String, String> choices) {
+        // craft DTO
+        QuestionSubmitDTO questionSubmitDTO = new QuestionSubmitDTO();
+        questionSubmitDTO.setCategoryId(Integer.parseInt(choices.get("categoryId")));
+        questionSubmitDTO.setText(choices.get("text"));
+        questionSubmitDTO.setQuestionId(questionId);
+        questionSubmitDTO.setParamMap(choices);
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<QuestionSubmitDTO> requestEntity =
+                    new HttpEntity<>(questionSubmitDTO, headers);
+
+            restTemplate.put(baseUrl + "/api/admin/questions", requestEntity);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        return "redirect:/admin/questionManagement";
+    }
+
 }

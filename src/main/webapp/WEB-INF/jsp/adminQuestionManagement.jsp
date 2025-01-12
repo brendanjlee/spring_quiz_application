@@ -38,7 +38,7 @@
                     </form>
                 </td>
                 <td>
-                    <a href="${pageContext.request.contextPath}/admin/editQuestion?questionId=${question.id}"
+                    <a href="${pageContext.request.contextPath}/admin/editQuestion/${question.id}"
                        class="btn btn-primary">
                         Edit
                     </a>
