@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -173,6 +174,7 @@ public class AdminController {
         Utilities.logApiWithMethod("GET", basePath, "contacts");
         try {
             List<Contact> contacts = contactService.findAllContacts();
+            contacts.sort((c1, c2) -> c2.getTimeSubmitted().compareTo(c1.getTimeSubmitted()));
             return ResponseEntity.ok().body(contacts);
         } catch (Exception e) {
             return ResponseEntity.status(400).body(null);
