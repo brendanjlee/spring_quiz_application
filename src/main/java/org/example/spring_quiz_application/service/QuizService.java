@@ -43,6 +43,14 @@ public class QuizService {
                 .map(CategoryDTO::new).collect(Collectors.toList());
     }
 
+    public Category findCategoryById(int categoryId) {
+        return categoryRepository.findCategoryById(categoryId);
+    }
+
+    public CategoryDTO findCategoryDtoById(int categoryId) {
+        return new CategoryDTO(categoryRepository.findCategoryById(categoryId));
+    }
+
     public List<QuizResult> findQuizResultsByUserId(int userId) {
         return quizResultRepository.findQuizResultsByUserId(userId);
     }
@@ -95,6 +103,11 @@ public class QuizService {
 
     public List<Question> findQuestionsByCategoryId(int categoryId) {
         return questionRepository.findQuestionsByCategoryId(categoryId);
+    }
+
+    public List<QuestionDTO> findQuestionDTOsByCategoryId(int categoryId) {
+        return questionRepository.findQuestionsByCategoryId(categoryId).stream()
+                .map(QuestionDTO::new).collect(Collectors.toList());
     }
 
     public List<Choice> findChoicesByQuestionId(int questionId) {

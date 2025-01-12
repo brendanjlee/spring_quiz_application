@@ -27,7 +27,6 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <%--                        todo update links--%>
                         <c:forEach var="quizResult" items="${quizResults}">
                             <tr>
                                 <td>${quizResult.categoryName}</td>
@@ -56,7 +55,7 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <form method="post" action="api/quiz">
+                        <form method="post" action="${pageContext.request.contextPath}/quiz/${user.id}">
                             <div class="mb-3">
                                 <label for="category" class="form-label">Select Quiz Category</label>
                                 <select class="form-control" id="category" name="category">

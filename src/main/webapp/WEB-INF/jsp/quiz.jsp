@@ -10,7 +10,7 @@
 <!-- Header Bar with Category Name and Today's Date -->
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center">
-        <div><h4>${categoryName}</h4></div>  <!-- Display category name -->
+        <div><h4>${category.name}</h4></div>  <!-- Display category name -->
         <div><h5>Time Left</h5></div>  <!-- Today's date -->
     </div>
 </div>

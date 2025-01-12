@@ -36,6 +36,14 @@ public class QuizController {
         return ResponseEntity.ok(categoryDTOS);
     }
 
+    @GetMapping("categories/{categoryId}")
+    public ResponseEntity<CategoryDTO> getCategoryDTO(@PathVariable("categoryId") int categoryId) {
+        Utilities.logApiWithMethod("GET", basePath, "categories/{}",
+                String.valueOf(categoryId));
+        CategoryDTO categoryDTO = quizService.findCategoryDtoById(categoryId);
+        return ResponseEntity.ok(categoryDTO);
+    }
+
     @PostMapping("start/{userId}")
     public ResponseEntity<String> postStartQuiz(@PathVariable("userId") int userId) {
         Utilities.logApiWithMethod("POST", basePath, "start");
@@ -46,10 +54,11 @@ public class QuizController {
     }
 
     @GetMapping("categories/{categoryId}/questions")
-    public ResponseEntity<List<Question>> getQuestions(@PathVariable(
+    public ResponseEntity<List<QuestionDTO>> getQuestionsByCategoryId(@PathVariable(
             "categoryId") int categoryId) {
         Utilities.logApiWithMethod("GET", basePath, "categories/questions");
-        return ResponseEntity.ok(null);
+        List<QuestionDTO> questionDTOS = quizService.findQuestionDTOsByCategoryId(categoryId);
+        return ResponseEntity.ok(questionDTOS);
     }
 
     @PostMapping("results")

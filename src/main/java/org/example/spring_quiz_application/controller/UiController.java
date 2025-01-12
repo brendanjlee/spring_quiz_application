@@ -2,6 +2,7 @@ package org.example.spring_quiz_application.controller;
 
 
 import org.example.spring_quiz_application.DTO.CategoryDTO;
+import org.example.spring_quiz_application.DTO.QuestionDTO;
 import org.example.spring_quiz_application.DTO.QuizResultDTO;
 import org.example.spring_quiz_application.model.Category;
 import org.example.spring_quiz_application.model.QuizResult;
@@ -14,9 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.Response;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -193,7 +197,9 @@ public class UiController {
     }
 
     @GetMapping("/quiz/result/{userId}/{quizResultId}")
-    public String getQuizResult(@PathVariable("userId") int userId, @PathVariable("quizResultId") String quizResultId, Model model, HttpServletRequest request) {
+    public String getQuizResult(@PathVariable("userId") int userId,
+                                @PathVariable("quizResultId") String quizResultId,
+                                Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         // redirect if not logged in
         if (session == null || session.getAttribute("user") == null) {
@@ -216,8 +222,60 @@ public class UiController {
         }
     }
 
-    @GetMapping("/placeHolder")
-    public String placeHolder() {
-        return "placeHolder";
+    @PostMapping("/quiz/{userId}")
+    public String postQuizPage(@PathVariable("userId") int userId,
+                               @RequestParam("category") int categoryId,
+                               RedirectAttributes redirectAttributes) {
+        // check user session
+        try {
+            // get category
+            CategoryDTO categoryDTO = restTemplate.getForObject(
+                    baseUrl + "api/quiz/categories/" + categoryId,
+                    CategoryDTO.class);
+
+            // get questions
+            ResponseEntity<List<QuestionDTO>> questionResponse = restTemplate.exchange(baseUrl + "api/quiz/categories/" + categoryId + "/questions",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<QuestionDTO>>() {
+                    });
+
+            // shuffle questions, pick 5
+            List<QuestionDTO> questionDTOS = questionResponse.getBody();
+            if (questionDTOS != null && !questionDTOS.isEmpty()) {
+                Collections.shuffle(questionDTOS);
+                questionDTOS = questionDTOS.subList(0, 5);
+            }
+
+            // attach to model
+            redirectAttributes.addFlashAttribute("category", categoryDTO);
+            redirectAttributes.addFlashAttribute("questions", questionDTOS);
+
+            return "redirect:/quiz/" + userId;
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/quiz/{categoryId}")
+    public String getQuiz(@PathVariable("categoryId") int categoryId,
+                          @ModelAttribute("category") CategoryDTO category,
+                          @ModelAttribute("questions") List<QuestionDTO> questions,
+                          Model model,
+                          HttpServletRequest request) {
+        // check for user
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            System.out.println("session or user is null");
+            return "redirect:/login";
+        }
+
+        // get models
+        model.addAttribute("category", category);
+        model.addAttribute("questions", questions);
+
+        return "quiz";
     }
 }
