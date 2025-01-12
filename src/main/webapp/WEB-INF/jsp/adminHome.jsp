@@ -14,13 +14,13 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="d-grid gap-3">
-                <a href="${pageContext.request.contextPath}/userManagement" class="btn btn-primary btn-lg">User
+                <a href="${pageContext.request.contextPath}/admin/userManagement" class="btn btn-primary btn-lg">User
                     Management</a>
-                <a href="${pageContext.request.contextPath}/quizResultManagement" class="btn btn-primary btn-lg">Quiz
+                <a href="${pageContext.request.contextPath}/admin/quizResultManagement" class="btn btn-primary btn-lg">Quiz
                     Result Management</a>
-                <a href="${pageContext.request.contextPath}/questionManagement" class="btn btn-primary btn-lg">Question
+                <a href="${pageContext.request.contextPath}/admin/questionManagement" class="btn btn-primary btn-lg">Question
                     Management</a>
-                <a href="${pageContext.request.contextPath}/contactUsManagement" class="btn btn-primary btn-lg">Contact
+                <a href="${pageContext.request.contextPath}/admin/contactUsManagement" class="btn btn-primary btn-lg">Contact
                     Us Management</a>
             </div>
         </div>

@@ -39,6 +39,7 @@ Quiz Result Page (/quiz/result/{quiz_result_id})
 Contact Us (/contactUs)
  [x] form for subject, email, and message
  [x] no need to login
+ [] submit
 
 
 Admin
