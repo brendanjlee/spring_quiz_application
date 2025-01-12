@@ -1,5 +1,9 @@
 package org.example.spring_quiz_application.service;
 
+import org.example.spring_quiz_application.DTO.CategoryDTO;
+import org.example.spring_quiz_application.DTO.ChoiceDTO;
+import org.example.spring_quiz_application.DTO.QuestionDTO;
+import org.example.spring_quiz_application.DTO.QuizResultDTO;
 import org.example.spring_quiz_application.model.*;
 import org.example.spring_quiz_application.repository.CategoryRepository;
 import org.example.spring_quiz_application.repository.QuestionRepository;
@@ -34,6 +38,11 @@ public class QuizService {
         return categoryRepository.findAllCategories();
     }
 
+    public List<CategoryDTO> findAllCategoriesDTO() {
+        return categoryRepository.findAllCategories().stream()
+                .map(CategoryDTO::new).collect(Collectors.toList());
+    }
+
     public List<QuizResult> findQuizResultsByUserId(int userId) {
         return quizResultRepository.findQuizResultsByUserId(userId);
     }
@@ -41,6 +50,47 @@ public class QuizService {
     public QuizResult findQuizResultById(int quizResultId) {
         // map to dto at controller
         return quizResultRepository.findQuizResultById(quizResultId);
+    }
+
+    public QuizResultDTO findQuizResultDtoById(int quizResultId) {
+        // 1. pull quiz results
+        QuizResult quizResult = quizResultRepository.findQuizResultById(quizResultId);
+
+        // 2. pull joined results
+        List<QuizQuestion> quizQuestionList = quizResult.getQuizQuestions();
+        List<Question> questionList = quizQuestionList.stream()
+                .map(QuizQuestion::getQuestion).collect(Collectors.toList());
+        List<Choice> userChoiceList = quizQuestionList.stream()
+                .map(QuizQuestion::getUserChoice).collect(Collectors.toList());
+
+        // 3. create DTO out of the joined tables
+        List<ChoiceDTO> userChoiceDTOs = userChoiceList.stream()
+                .map(ChoiceDTO::new).collect(Collectors.toList());
+        List<QuestionDTO> questionDTOs = questionList.stream()
+                .map(QuestionDTO::new).collect(Collectors.toList());
+        questionDTOs.forEach(questionDTO -> {
+            questionDTO.getChoices().forEach(choice -> {
+                int choiceId = choice.getId();
+                choice.setUserAnswer(userChoiceDTOs.stream().map(ChoiceDTO::getId).collect(Collectors.toList()).contains(choiceId));
+            });
+        });
+
+        // 4. attach questions to DTO
+        QuizResultDTO quizResultDTO = new QuizResultDTO(quizResult);
+        quizResultDTO.setQuestions(questionDTOs);
+
+        // 5. calculate result
+        int result = 0;
+        for (QuestionDTO questionDTO : quizResultDTO.getQuestions()) {
+            for (ChoiceDTO choiceDTO : questionDTO.getChoices()) {
+                if (choiceDTO.isAnswer() && choiceDTO.isUserAnswer()) {
+                    result++;
+                }
+            }
+        }
+        quizResultDTO.setResult(result);
+
+        return quizResultDTO;
     }
 
     public List<Question> findQuestionsByCategoryId(int categoryId) {
@@ -53,10 +103,9 @@ public class QuizService {
 
     public List<QuizQuestion> findQuizQuestionsByQuizResultId(int quizResultId) {
         List<QuizQuestion> quizQuestions = quizQuestionRepository.findAll();
-        List<QuizQuestion> filetered = quizQuestions.stream()
+        return quizQuestions.stream()
                 .filter(quizQuestion -> quizQuestion.getQuizResult().getId() == quizResultId)
                 .collect(Collectors.toList());
-        return filetered;
     }
 }
 

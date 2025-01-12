@@ -31,11 +31,8 @@ public class QuizController {
     @GetMapping("categories")
     public ResponseEntity<List<CategoryDTO>> getCategoriesDTO() {
         Utilities.logApiWithMethod("GET", basePath, "categories");
-        List<Category> categories = quizService.findAllCategories();
-        List<CategoryDTO> categoryDTOS = categories.stream()
-                .map(CategoryDTO::new).collect(Collectors.toList());
-        System.out.println("categoryDTOS: " + categoryDTOS);
 
+        List<CategoryDTO> categoryDTOS = quizService.findAllCategoriesDTO();
         return ResponseEntity.ok(categoryDTOS);
     }
 
@@ -88,46 +85,7 @@ public class QuizController {
                 String.valueOf(userId),
                 String.valueOf(quizResultId));
         try {
-            // 1. pull quiz results from service
-            QuizResult quizResult =
-                    quizService.findQuizResultById(quizResultId);
-
-            // 2. pull joined tables from quizResult
-            List<QuizQuestion> quizQuestionList = quizResult.getQuizQuestions();
-            List<Question> questionList = quizQuestionList.stream()
-                    .map(QuizQuestion::getQuestion).collect(Collectors.toList());
-            List<Choice> userChoiceList = quizQuestionList.stream()
-                    .map(QuizQuestion::getUserChoice).collect(Collectors.toList());
-
-            // 3. create DTO out of the joined tables
-            List<ChoiceDTO> userChoiceDTOs = userChoiceList.stream()
-                    .map(ChoiceDTO::new).collect(Collectors.toList());
-            List<QuestionDTO> questionDTOs = questionList.stream()
-                    .map(QuestionDTO::new).collect(Collectors.toList());
-            questionDTOs.forEach(questionDTO -> {
-                questionDTO.getChoices().forEach(choice -> {
-                    int choiceId = choice.getId();
-                    choice.setUserAnswer(userChoiceDTOs.stream().map(ChoiceDTO::getId).collect(Collectors.toList()).contains(choiceId));
-                });
-            });
-
-            // 4. attach questions to DTO
-            QuizResultDTO quizResultDTO = new QuizResultDTO(quizResult);
-            quizResultDTO.setQuestions(questionDTOs);
-
-            // 5. calculate result
-            int result = 0;
-            for (QuestionDTO questionDTO : quizResultDTO.getQuestions()) {
-                for (ChoiceDTO choiceDTO : questionDTO.getChoices()) {
-                    if (choiceDTO.isAnswer() && choiceDTO.isUserAnswer()) {
-                        result++;
-                    }
-                }
-            }
-            System.out.println("result: " + result);
-            quizResultDTO.setResult(result);
-
-
+            QuizResultDTO quizResultDTO = quizService.findQuizResultDtoById(quizResultId);
             return ResponseEntity.ok(quizResultDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

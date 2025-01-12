@@ -11,9 +11,11 @@ import org.example.spring_quiz_application.model.Category;
 public class CategoryDTO {
     private int id;
     private String name;
+    private boolean isActive = true;
 
     public CategoryDTO(Category category) {
         this.id = category.getId();
         this.name = category.getName();
+        this.isActive = category.isActive();
     }
 }
