@@ -1,6 +1,7 @@
 package org.example.spring_quiz_application.controller;
 
 import org.example.spring_quiz_application.DTO.QuestionDTO;
+import org.example.spring_quiz_application.DTO.QuestionSubmitDTO;
 import org.example.spring_quiz_application.model.Category;
 import org.example.spring_quiz_application.model.Contact;
 import org.example.spring_quiz_application.model.Question;
@@ -124,9 +125,15 @@ public class AdminController {
     }
 
     @PostMapping("questions")
-    public ResponseEntity<List<QuestionDTO>> addQuestion(@RequestBody Question question) {
+    public ResponseEntity<Integer> addQuestion(@RequestBody QuestionSubmitDTO questionSubmitDTO) {
         Utilities.logApiWithMethod("POST", basePath, "questions");
-        return ResponseEntity.ok().body(null);
+        
+        try {
+            quizService.saveQuestion(questionSubmitDTO);
+            return ResponseEntity.ok().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(null);
+        }
     }
 
     @PutMapping("questions/{questionId}")

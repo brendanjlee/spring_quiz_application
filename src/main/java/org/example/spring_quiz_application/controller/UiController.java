@@ -232,7 +232,8 @@ public class UiController {
                     CategoryDTO.class);
 
             // get questions
-            ResponseEntity<List<QuestionDTO>> questionResponse = restTemplate.exchange(baseUrl + "api/quiz/categories/" + categoryId + "/questions",
+            ResponseEntity<List<QuestionDTO>> questionResponse = restTemplate.exchange(
+                    baseUrl + "api/quiz/categories/" + categoryId + "/questions",
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<List<QuestionDTO>>() {

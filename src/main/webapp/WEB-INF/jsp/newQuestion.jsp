@@ -10,7 +10,7 @@
 <%@include file="navbar.jsp" %>
 <div class="container mt-5">
     <h3>Add New Question</h3>
-    <form method="post" action="${pageContext.request.contextPath}/api/admin/saveNewQuestion">
+    <form method="post" action="${pageContext.request.contextPath}/admin/saveNewQuestion">
         <div class="mb-3">
             <label for="category" class="form-label">Category</label>
             <select class="form-select" id="category" name="categoryId" required>

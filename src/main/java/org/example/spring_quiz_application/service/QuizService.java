@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,6 +170,33 @@ public class QuizService {
                     .build();
             quizQuestionRepository.save(quizQuestion);
         }
+    }
+
+    @Transactional
+    public void saveQuestion(QuestionSubmitDTO questionSubmitDTO) {
+        // 1. get category name
+        Category category = categoryRepository.findById(questionSubmitDTO.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category ID"));
+
+        // 2. create question
+        Question question = Question.builder()
+                .category(category)
+                .text(questionSubmitDTO.getText())
+                .isActive(true)
+                .build();
+
+        // 3. extract choices
+        List<ChoiceDTO> choiceDTOS = questionSubmitDTO.extractChoices();
+        List<Choice> choices = choiceDTOS.stream()
+                .map(choiceDTO -> Choice.builder()
+                        .question(question)
+                        .text(choiceDTO.getText())
+                        .isAnswer(choiceDTO.isAnswer())
+                        .build())
+                .collect(Collectors.toList());
+        question.setChoices(choices);
+
+        questionRepository.save(question);
     }
 
     /* Mapper */

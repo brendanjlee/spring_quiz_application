@@ -1,9 +1,6 @@
 package org.example.spring_quiz_application.controller;
 
-import org.example.spring_quiz_application.DTO.CategoryDTO;
-import org.example.spring_quiz_application.DTO.QuestionDTO;
-import org.example.spring_quiz_application.DTO.QuizResultDTO;
-import org.example.spring_quiz_application.DTO.UserDTO;
+import org.example.spring_quiz_application.DTO.*;
 import org.example.spring_quiz_application.model.Contact;
 import org.example.spring_quiz_application.model.User;
 import org.springframework.core.ParameterizedTypeReference;
@@ -289,6 +286,58 @@ public class AdminUiController {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
+        return "redirect:/admin/questionManagement";
+    }
+
+    @GetMapping("newQuestion")
+    public String getNewQuestion(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (!validUser(session)) {
+            return "redirect:/";
+        }
+
+        try {
+            // get categories
+            ResponseEntity<List<CategoryDTO>> categoryDTOs = restTemplate.exchange(
+                    baseUrl + "api/quiz/categories",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<CategoryDTO>>() {
+                    }
+            );
+
+            model.addAttribute("categories", categoryDTOs.getBody());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return "redirect:/admin/questionManagement";
+        }
+
+        return "newQuestion";
+    }
+
+    @PostMapping("saveNewQuestion")
+    public String saveNewQuestion(@RequestParam("categoryId") int categoryId,
+                                  @RequestParam("text") String text,
+                                  @RequestParam Map<String, String> choices) {
+        // craft DTO
+        QuestionSubmitDTO questionSubmitDTO = new QuestionSubmitDTO();
+        questionSubmitDTO.setCategoryId(categoryId);
+        questionSubmitDTO.setText(text);
+        questionSubmitDTO.setParamMap(choices);
+
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<QuestionSubmitDTO> requestEntity = new HttpEntity<>(questionSubmitDTO, headers);
+
+            ResponseEntity<Integer> response = restTemplate.postForEntity(
+                    baseUrl + "/api/admin/questions", requestEntity, Integer.class
+            );
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
         return "redirect:/admin/questionManagement";
     }
 }

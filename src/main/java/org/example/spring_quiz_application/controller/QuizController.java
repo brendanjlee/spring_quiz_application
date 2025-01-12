@@ -63,12 +63,14 @@ public class QuizController {
         return ResponseEntity.ok(questionDTOS);
     }
 
-    @PostMapping("results")
-    public ResponseEntity<String> postResults(@RequestBody List<Question> questions) {
-        Utilities.logApiWithMethod("POST", basePath, "results",
-                String.valueOf(questions.size()));
-        return ResponseEntity.ok("Quiz finished");
-    }
+    /* Quiz Results */
+
+//    @PostMapping("results")
+//    public ResponseEntity<String> postResults(@RequestBody List<Question> questions) {
+//        Utilities.logApiWithMethod("POST", basePath, "results",
+//                String.valueOf(questions.size()));
+//        return ResponseEntity.ok("Quiz finished");
+//    }
 
     @GetMapping("results")
     public ResponseEntity<List<QuizResultDTO>> getAllResults() {
