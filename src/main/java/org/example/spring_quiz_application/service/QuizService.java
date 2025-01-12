@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -90,6 +91,23 @@ public class QuizService {
                 .map(QuestionDTO::new).collect(Collectors.toList());
     }
 
+    public List<QuestionDTO> findAllQuestionDTOs() {
+        List<QuestionDTO> questionDTOS = questionRepository.findAll().stream()
+                .map(QuestionDTO::new).collect(Collectors.toList());
+
+        List<CategoryDTO> categoryDTOs = findAllCategoriesDTO();
+        Map<Integer, String> categoryIdToNameMap = new HashMap<>();
+        for (CategoryDTO categoryDTO : categoryDTOs) {
+            categoryIdToNameMap.put(categoryDTO.getId(), categoryDTO.getName());
+        }
+
+        for (QuestionDTO questionDTO : questionDTOS) {
+            questionDTO.setCategoryName(categoryIdToNameMap.get(questionDTO.getCategoryId()));
+        }
+
+        return questionDTOS;
+    }
+
     public List<Choice> findChoicesByQuestionId(int questionId) {
         return quizResultRepository.findChoicesByQuestionId(questionId);
     }
@@ -99,6 +117,13 @@ public class QuizService {
         return quizQuestions.stream()
                 .filter(quizQuestion -> quizQuestion.getQuizResult().getId() == quizResultId)
                 .collect(Collectors.toList());
+    }
+
+    public void toggleQuestionActive(int questionId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(() ->
+                new EntityNotFoundException("Question not found with ID: " + questionId));
+        question.setActive(!question.isActive());
+        questionRepository.save(question);
     }
 
     @Transactional

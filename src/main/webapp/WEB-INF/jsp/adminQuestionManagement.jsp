@@ -28,16 +28,17 @@
                 <td>${question.categoryName}</td>
                 <td>${question.text}</td>
                 <td>
-                    <form method="post"
-                          action="${pageContext.request.contextPath}/api/admin/toggleActiveStatus/question">
-                        <input type="hidden" name="questionId" value="${question.questionId}"/>
+                    <form action="${pageContext.request.contextPath}/admin/questions/${question.id}/toggleActive"
+                          method="post"
+                    >
+                        <input type="hidden" name="questionId" value="${question.id}"/>
                         <button type="submit" class="btn ${question.active ? 'btn-success' : 'btn-danger'}">
                                 ${question.active ? 'Active' : 'Inactive'}
                         </button>
                     </form>
                 </td>
                 <td>
-                    <a href="${pageContext.request.contextPath}/admin/editQuestion?questionId=${question.questionId}"
+                    <a href="${pageContext.request.contextPath}/admin/editQuestion?questionId=${question.id}"
                        class="btn btn-primary">
                         Edit
                     </a>

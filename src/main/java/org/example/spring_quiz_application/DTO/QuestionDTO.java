@@ -20,6 +20,9 @@ public class QuestionDTO {
 
     private List<ChoiceDTO> choices;
     
+    // computed
+    private String categoryName;
+
     public QuestionDTO(Question question) {
         this.id = question.getId();
         this.categoryId = question.getCategory().getId();

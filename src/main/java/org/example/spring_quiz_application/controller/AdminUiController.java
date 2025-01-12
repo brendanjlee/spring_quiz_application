@@ -46,6 +46,8 @@ public class AdminUiController {
         return "adminHome";
     }
 
+    /* User Management */
+
     @GetMapping("userManagement")
     public String getUserManagement(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
@@ -71,7 +73,6 @@ public class AdminUiController {
         }
     }
 
-    // toggle endpoint. call backend, then reload the page
     @PostMapping("toggleActive/{userId}")
     public String toggleActive(@PathVariable("userId") int userId, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -123,6 +124,8 @@ public class AdminUiController {
 
         return "redirect:/admin/userManagement";
     }
+
+    /* Quiz Result Management */
 
     @GetMapping("quizResultManagement")
     public String getQuizResultManagement(@RequestParam(value = "category", required = false) Integer categoryId,
@@ -206,10 +209,13 @@ public class AdminUiController {
             model.addAttribute("quizResults", results);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
+            return "redirect:/";
         }
 
         return "adminQuizResult";
     }
+
+    /* Contact Us Management */
 
     @GetMapping("contactUsManagement")
     public String getContactUsManagement(HttpServletRequest request, Model model) {
@@ -218,16 +224,71 @@ public class AdminUiController {
             return "redirect:/";
         }
 
-        ResponseEntity<List<Contact>> contactResponse = restTemplate.exchange(
-                baseUrl + "api/admin/contacts",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<Contact>>() {
-                }
-        );
+        try {
+            ResponseEntity<List<Contact>> contactResponse = restTemplate.exchange(
+                    baseUrl + "api/admin/contacts",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<Contact>>() {
+                    }
+            );
 
-        model.addAttribute("contacts", contactResponse.getBody());
+            model.addAttribute("contacts", contactResponse.getBody());
 
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return "redirect:/";
+        }
         return "adminContact";
+    }
+
+    /* Question Management */
+
+    @GetMapping("questionManagement")
+    public String getQuestionManagement(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (!validUser(session)) {
+            return "redirect:/";
+        }
+
+        try {
+            ResponseEntity<List<QuestionDTO>> questionResponse = restTemplate.exchange(
+                    baseUrl + "api/admin/questions",
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<QuestionDTO>>() {
+                    }
+            );
+            model.addAttribute("questions", questionResponse.getBody());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return "redirect:/";
+        }
+
+        return "adminQuestionManagement";
+    }
+
+    @PostMapping("questions/{questionId}/toggleActive")
+    public String toggleActiveQuestion(@PathVariable("questionId") int questionId, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (!validUser(session)) {
+            return "redirect:/";
+        }
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+            restTemplate.exchange(
+                    baseUrl + "/api/admin/questions/" + questionId + "/toggleActive",
+                    HttpMethod.PUT,
+                    requestEntity,
+                    Void.class
+            );
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return "redirect:/admin/questionManagement";
     }
 }

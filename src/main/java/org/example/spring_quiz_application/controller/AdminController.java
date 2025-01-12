@@ -1,10 +1,12 @@
 package org.example.spring_quiz_application.controller;
 
+import org.example.spring_quiz_application.DTO.QuestionDTO;
 import org.example.spring_quiz_application.model.Category;
 import org.example.spring_quiz_application.model.Contact;
 import org.example.spring_quiz_application.model.Question;
 import org.example.spring_quiz_application.model.User;
 import org.example.spring_quiz_application.service.ContactService;
+import org.example.spring_quiz_application.service.QuizService;
 import org.example.spring_quiz_application.service.UserService;
 import org.example.spring_quiz_application.util.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +22,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
-    private final ContactService contactService;
     private final String basePath = "/api/admin";
+    private final ContactService contactService;
     private final UserService userService;
+    private final QuizService quizService;
 
     @Autowired
-    public AdminController(ContactService contactService, UserService userService) {
+    public AdminController(ContactService contactService, UserService userService, QuizService quizService) {
         this.contactService = contactService;
+        this.quizService = quizService;
         this.userService = userService;
     }
 
@@ -101,9 +105,15 @@ public class AdminController {
 
     /* Question Management */
     @GetMapping("questions")
-    public ResponseEntity<List<Question>> getQuestions() {
+    public ResponseEntity<List<QuestionDTO>> getQuestions() {
         Utilities.logApiWithMethod("GET", basePath, "questions");
-        return ResponseEntity.ok().body(null);
+        try {
+            List<QuestionDTO> questionDTOS = quizService.findAllQuestionDTOs();
+            return ResponseEntity.ok().body(questionDTOS);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.ok().body(null);
+        }
     }
 
     @GetMapping("questions/{questionId}")
@@ -114,7 +124,7 @@ public class AdminController {
     }
 
     @PostMapping("questions")
-    public ResponseEntity<Question> addQuestion(@RequestBody Question question) {
+    public ResponseEntity<List<QuestionDTO>> addQuestion(@RequestBody Question question) {
         Utilities.logApiWithMethod("POST", basePath, "questions");
         return ResponseEntity.ok().body(null);
     }
@@ -127,10 +137,14 @@ public class AdminController {
         return ResponseEntity.ok().body(null);
     }
 
-    @PatchMapping("questions/{questionId}")
+    @PutMapping("questions/{questionId}/toggleActive")
     public ResponseEntity<Question> toggleQuestion(@PathVariable("questionId") int questionId) {
-        Utilities.logApiWithMethod("PATCH", basePath, "questions/{}",
-                String.valueOf(questionId));
+        Utilities.logApiWithMethod("PATCH", basePath, "questions/toggleActive");
+        try {
+            quizService.toggleQuestionActive(questionId);
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(null);
+        }
         return ResponseEntity.ok().body(null);
     }
 
