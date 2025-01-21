@@ -1,5 +1,6 @@
 package org.example.spring_quiz_application.controller;
 
+import org.example.spring_quiz_application.DAO.ContactDao;
 import org.example.spring_quiz_application.DTO.*;
 import org.example.spring_quiz_application.model.*;
 import org.example.spring_quiz_application.service.QuizService;
@@ -32,7 +33,8 @@ public class QuizController {
     }
 
     @GetMapping("categories/{categoryId}")
-    public ResponseEntity<CategoryDTO> getCategoryDTO(@PathVariable("categoryId") int categoryId) {
+    public ResponseEntity<CategoryDTO> getCategoryDTO(@PathVariable(
+            "categoryId") int categoryId) {
         Utilities.logApiWithMethod("GET", basePath, "categories/{}",
                 String.valueOf(categoryId));
         CategoryDTO categoryDTO = quizService.findCategoryDtoById(categoryId);
@@ -46,7 +48,8 @@ public class QuizController {
 
 
         try {
-            int quizResultId = quizService.submitQuizResult(userId, quizResultSubmitDTO);
+            int quizResultId = quizService.submitQuizResult(userId,
+                    quizResultSubmitDTO);
 
             return ResponseEntity.ok(quizResultId);
         } catch (Exception e) {
@@ -59,24 +62,19 @@ public class QuizController {
     public ResponseEntity<List<QuestionDTO>> getQuestionsByCategoryId(@PathVariable(
             "categoryId") int categoryId) {
         Utilities.logApiWithMethod("GET", basePath, "categories/questions");
-        List<QuestionDTO> questionDTOS = quizService.findQuestionDTOsByCategoryId(categoryId);
+        List<QuestionDTO> questionDTOS =
+                quizService.findQuestionDTOsByCategoryId(categoryId);
         return ResponseEntity.ok(questionDTOS);
     }
 
     /* Quiz Results */
 
-//    @PostMapping("results")
-//    public ResponseEntity<String> postResults(@RequestBody List<Question> questions) {
-//        Utilities.logApiWithMethod("POST", basePath, "results",
-//                String.valueOf(questions.size()));
-//        return ResponseEntity.ok("Quiz finished");
-//    }
-
     @GetMapping("results")
     public ResponseEntity<List<QuizResultDTO>> getAllResults() {
         Utilities.logApiWithMethod("GET", basePath, "results");
         try {
-            List<QuizResultDTO> quizResultDTOS = quizService.findAllQuizResultDTO();
+            List<QuizResultDTO> quizResultDTOS =
+                    quizService.findAllQuizResultDTO();
 
             // map questions
 
@@ -110,13 +108,28 @@ public class QuizController {
 
     @GetMapping("results/{userId}/{quizResultId}")
     public ResponseEntity<QuizResultDTO> getResult(@PathVariable("userId") int userId,
-                                                   @PathVariable("quizResultId") int quizResultId) {
+                                                   @PathVariable(
+                                                           "quizResultId") int quizResultId) {
         Utilities.logApiWithMethod("GET", basePath, "results",
                 String.valueOf(userId),
                 String.valueOf(quizResultId));
         try {
-            QuizResultDTO quizResultDTO = quizService.findQuizResultDtoById(quizResultId);
+            QuizResultDTO quizResultDTO =
+                    quizService.findQuizResultDtoById(quizResultId);
             return ResponseEntity.ok(quizResultDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/hibernateTest")
+    public ResponseEntity<String> getHibernateTest() {
+        Utilities.logApiWithMethod("GET", basePath, "hibernateTest");
+        try {
+            ContactDao contactDao = new ContactDao();
+            Contact contact = contactDao.getContactById(1);
+            System.out.println(contact);
+            return ResponseEntity.ok("Hibernate Test");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

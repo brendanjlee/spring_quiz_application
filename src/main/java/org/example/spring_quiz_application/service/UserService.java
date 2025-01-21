@@ -22,6 +22,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User findUserById(int id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
     public List<UserDTO> findAllUsersDTO() {
         try {
             List<User> users = findAllUsers();
